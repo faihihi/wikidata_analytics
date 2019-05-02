@@ -16,7 +16,7 @@ var RevisionSchema = new mongoose.Schema({
 
 
 //Overall #1 : Title of 2 articles with highest number of revisions
-RevisionSchema.statics.find2MostNumRev = function(number, callback){
+RevisionSchema.statics.findMostNumRev = function(number, callback){
 	var query = [
 		{$group: {_id:"$title", numOfRevisions:{$sum:1}}},
 		{$sort: {numOfRevisions:-1}},
@@ -27,7 +27,7 @@ RevisionSchema.statics.find2MostNumRev = function(number, callback){
 }
 
 //Overall #2 : Title of 2 articles with lowest number of revisions
-RevisionSchema.statics.find2LeastNumRev = function(number, callback){
+RevisionSchema.statics.findLeastNumRev = function(number, callback){
 	var query = [
 		{$group: {_id:"$title", numOfRevisions:{$sum:1}}},
 		{$sort: {numOfRevisions:1}},
@@ -109,6 +109,11 @@ RevisionSchema.statics.overallRevAdminType = function(callback){
 	.exec(callback)
 }
 
+//Individual Article Dropdown List
+RevisionSchema.statics.articleDropDownList = function(callback){
+	return this.distinct("title")
+	.exec(callback)
+}
 
 RevisionSchema.statics.findTitleLatestRev = function(title, callback){
 	return this.find({'title':title})

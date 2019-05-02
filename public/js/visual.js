@@ -5,12 +5,12 @@ google.charts.setOnLoadCallback(drawOverallPieChart);
 
 
 $(document).ready(function(){
-    $('#numHighest').on('click', function(e){
+    $('#numOfArticleSubmit').on('click', function(e){
       var getnumber = $('#number').val();
       console.log(getnumber);
       var parameters = {numberofarticle: $('#number').val() };
-      $.get('/main/getHighestRevision', parameters, function(result) {
-          $('#testtt').html(result);
+      $.get('/main/getHighLowRev', parameters, function(result) {
+          $('#numHighLowResult').html(result);
       });
     });
 

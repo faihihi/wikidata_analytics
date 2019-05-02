@@ -13,18 +13,33 @@ if(fs.existsSync(directoryPath)){
       return;
     }
     filenames.forEach(function(filename){
+      //var escapedfilename = filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      //console.log(escapedfilename);
       fs.readFile(directoryPath + filename, 'utf-8', function(err, content){
         if(err){
           console.log(err);
           return;
         }
         console.log("Importing... " + filename);
-        exec(importcommand + filename);
-        //onFileContent(filename, content);
+        exec(importcommand + escapeFileName(filename));
       });
     });
   });
 }
 else{
   console.log("Directory not found");
+}
+
+function escapeFileName(filename){
+    var name = "";
+    for (var i=0;i<filename.length; i++) {
+        if(filename[i].match(/[^a-z0-9.]/gi)){
+          //console.log(filename[i]);
+            name+="\\"+filename[i];
+        }
+        else{
+            name+=filename[i];
+        }
+    }
+    return name;
 }

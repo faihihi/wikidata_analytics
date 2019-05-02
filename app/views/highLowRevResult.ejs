@@ -6,12 +6,12 @@
    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-  <p>Titles of the two articles with highest number of revisions :
+  <p>Titles of <%= allResult.numberOfArticle %> articles with highest number of revisions :
     <% if (locals.allResult.mostNumRev) {for(var i=0; i < allResult.mostNumRev.length; i++) { %>
         <%= allResult.mostNumRev[i] %>,
     <% }} %>
   </p>
-  <p>Titles of the two articles with lowest number of revisions :
+  <p>Titles of <%= allResult.numberOfArticle %> articles with lowest number of revisions :
     <% if (locals.allResult.leastNumRev) {for(var i=0; i < allResult.leastNumRev.length; i++) { %>
         <%= allResult.leastNumRev[i] %>,
     <% }} %>

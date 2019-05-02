@@ -28,21 +28,29 @@
 -->
 
 
-<div id="resulttest">
+<div id="overallSection">
+  <h2>Overall Analytics</h2>
   <label>Number of Article:</label>
   <input id="number" type="text" name="title">
-  <input id="numHighest" type="submit" value="Search">
-  <div id="testtt">
-    <p>Titles of the two articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
-    <p>Titles of the two articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
+  <input id="numOfArticleSubmit" type="submit" value="Search">
+  <div id="numHighLowResult">
+    <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
+    <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
   </div>
   <p>The article edited by largest group of registered users :<%= allResult.largestRegUserRev%></p>
+
+  <div id="overallBarChartSec"></div>
+  <div id="overallPieChartSec"></div>
 </div>
 
-<div id="overallBarChartSec"></div>
-<div id="overallPieChartSec"></div>
-
-<div id="barChartforArticle">
+<div id="individualSection">
+  <h2>Individual Article Analytics</h2>
+  <select id="select1" name="article">
+    <option>Choose an Article</option>
+    <% for(var i = 0; i < overallData.fileList.length; i++){ %>
+      <option value="<%- overallData.fileList[i] %>"><%= overallData.fileList[i] %> </option>
+    <% } %>	
+  </select>
 </div>
 
 <!--

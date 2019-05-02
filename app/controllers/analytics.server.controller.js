@@ -21,7 +21,7 @@ module.exports.showMain = function(req, res) {
   if(req.query.numberofarticle != null){var numberofarticle = parseInt(req.query.numberofarticle);}
   else{var numberofarticle = 2;}
   console.log(numberofarticle);
-  Revision.find2MostNumRev(numberofarticle, function(err, result){
+  Revision.findMostNumRev(numberofarticle, function(err, result){
     if(err){console.log("ERROR");}
     else{
       allResult.mostNumRev1 = result[0]._id;
@@ -31,7 +31,7 @@ module.exports.showMain = function(req, res) {
     }
   });
 
-  Revision.find2LeastNumRev(parseInt(numberofarticle), function(err, result){
+  Revision.findLeastNumRev(parseInt(numberofarticle), function(err, result){
     if(err){console.log("ERROR");}
     else{
       allResult.leastNumRev1 = result[0]._id;
@@ -83,67 +83,40 @@ function parseAllResult(allResult, res, count, viewfile){
   else{res.render(viewfile, {allResult: allResult});}
 }
 
-module.exports.getHighestRevision = function(req, res) {
+module.exports.getHighLowRev = function(req, res) {
   var allResult = {};
   allResult.mostNumRev = [];
   allResult.leastNumRev = [];
   var count = 0;
   var numberofarticle = parseInt(req.query.numberofarticle);
-  Revision.find2MostNumRev(numberofarticle, function(err, result){
+  Revision.findMostNumRev(numberofarticle, function(err, result){
     if(err){console.log("ERROR");}
     else{
       for(var i=0;i<numberofarticle;i++){
         allResult.mostNumRev[i] = result[i]._id;
       }
       //res.render('highestRevision.ejs', {allResult: allResult});
+      allResult.numberOfArticle = numberofarticle;
       count++;
-      parseHighestRevResult(allResult, res, count, 'highestRevision.ejs');
+      parseHighLowRevResult(allResult, res, count, 'highLowRevResult.ejs');
     }
   });
-  Revision.find2LeastNumRev(numberofarticle, function(err, result){
+  Revision.findLeastNumRev(numberofarticle, function(err, result){
     if(err){console.log("ERROR");}
     else{
       for(var i=0;i<numberofarticle;i++){
         allResult.leastNumRev[i] = result[i]._id;
       }
       count++;
-      parseHighestRevResult(allResult, res, count, 'highestRevision.ejs');
+      parseHighLowRevResult(allResult, res, count, 'highLowRevResult.ejs');
     }
   });
 };
 
-function parseHighestRevResult(allResult, res, count, viewfile){
+function parseHighLowRevResult(allResult, res, count, viewfile){
   if(count < 2){return;}
   else{res.render(viewfile, {allResult: allResult});}
 }
 
-/*
-module.exports.showResult = function(req, res) {
 
-  title = req.query.title;
-    console.log(title);
-
-    Revision.findTitleLatestRev(title, function(err,result){
-  		if (err){
-  			console.log("Cannot find " + title + ",s latest revision!")
-  		}else{
-  			// console.log(result)
-        if(result[0] != null){
-          //revision = result[0];
-          allResult.pop(result[0]);
-          //renderMain(res, revision);
-
-          $.get('/main/getResult', title, function(res,req){
-
-          });
-    			//res.render('main.ejs',{title: title, revision:revision})
-        }
-        else{
-          console.log("Cannot find " + title + "'s latest revision!")
-        }
-
-  		}
-  	})
-
-
-};*/
+//Get all article names

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+   <meta charset="utf-8">
+   <title>COMP5347 Group Project</title>
+   <link rel="stylesheet" href="/css/style.css" />
+   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript" src="/js/visual.js"></script>
+
+</head>
+<body>
+  <script type="text/javascript">
+		var overallBarChart = <%- JSON.stringify(allResult.overallBarChart) %>;
+    var overallPieChart = <%- JSON.stringify(allResult.overallPieChart) %>;
+    var overallRevAdminType = <%- JSON.stringify(allResult.overallRevAdminType) %>;
+
+	</script>
+<!--
+<div id="searchfield">
+  <form method="GET" action="/main/getResult">
+    <label>Title:</label>
+    <input id="title" type="text" name="title"><br>
+    <input id="querySubmit" type="submit" value="Search">
+    <input type="reset" value="Clear">
+  </form>
+</div>
+-->
+
+
+<div id="resulttest">
+  <label>Number of Article:</label>
+  <input id="number" type="text" name="title">
+  <input id="numHighest" type="submit" value="Search">
+  <div id="testtt">
+    <p>Titles of the two articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
+    <p>Titles of the two articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
+  </div>
+  <p>The article edited by largest group of registered users :<%= allResult.largestRegUserRev%></p>
+</div>
+
+<div id="overallBarChartSec"></div>
+<div id="overallPieChartSec"></div>
+
+<div id="barChartforArticle">
+</div>
+
+<!--
+<table>
+  <tr>
+    <th>Field Name</th>
+    <th>Value</th>
+  </tr>
+  <tr>
+    <td>Title</td>
+  </tr>
+  <tr>
+    <td>User</td>
+    <td><%=allResult.user%></td>
+  </tr>
+  <tr>
+    <td>Timestamp</td>
+    <td><%=allResult.timestamp%></td>
+  </tr>
+</table>
+-->
+
+</body>
+</html>

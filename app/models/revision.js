@@ -83,15 +83,6 @@ RevisionSchema.statics.overallBarChart = function(callback){
 
 //Overall #9 : Pie chart of revision number distribution by user type across the whole data set
 RevisionSchema.statics.overallPieChart = function(callback){
-	/*var query = [
-		{$group: {_id: {usertype:"$usertype", admintype:"$admintype"}, numbOfRev: {$sum: 1}}},
-    {$project: {
-				_id: 0,
-				usertype:"$_id.usertype",
-        admintype:"$_id.admintype",
-        numbOfRev: "$numbOfRev"
-    }}
-	]*/
 	var query = [
 		{$group: {_id: {usertype:"$usertype"}, numbOfRev: {$sum: 1}}},
     {$project: {

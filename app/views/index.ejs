@@ -3,32 +3,40 @@
 <head lang="en">
    <meta charset="utf-8">
    <title>COMP5347 Group Project</title>
-   <link rel="stylesheet" href="style.css" />
-   <script type="text/javascript" src="validation.js"></script>
+   <link rel="stylesheet" href="/css/style.css" />
+   <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+   <script type="text/javascript" src="/js/frontend.js"></script>
+
 
 </head>
 <body>
-<form method="post" action="" id="mainForm">
-  <!--
-  <label for="email">Email:</label>
-  <input type="text" id="email" name="email"><br>
-  <label for="password">Password:</label>
-  <input type="text" id="password" name="password"><br>
-  <button type="button" onclick="">Login</button><br><br>
--->
+  <div id="loginform" style="<%=logindisplay%>">
+    <label for="email">Email:</label>
+    <input type="text" id="loginemail"><br>
+    <label for="password">Password:</label>
+    <input type="text" id="loginpassword"><br>
+    <button type="button" onclick="">Login</button><br>
+    <button type="button" onclick="register()">Register</button><br><br>
+  </div>
 
-  <p id="errorresult"></p>
-  <label for="email">Email:</label>
-  <input type="text" id="email" name="email" class="required"><br>
-  <label for="password">Password:</label>
-  <input type="text" id="password" name="password" class="required"><br>
-  <label for="password">Re-Password:</label>
-  <input type="text" id="repassword" name="repassword" class="required"><br>
-  <label for="firstname">First name:</label>
-  <input type="text" id="firstname" name="firstname" class="required"><br>
-  <label for="lastname">Last name:</label>
-  <input type="text" id="lastname" name="lastname" class="required"><br>
-  <input type="submit">
-</form>
+
+  <div id="registrationform" style = "<%=registrationdisplay%>">
+    <form method="POST" action="main" id="mainForm">
+      <p id="errorresult"><%=errormsg%></p>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" class="required" value="<%=inputemail%>"><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" class="required"><br>
+      <label for="password">Re-Password:</label>
+      <input type="password" id="repassword" name="repassword" class="required"><br>
+      <label for="firstname">First name:</label>
+      <input type="text" id="firstname" name="firstname" class="required" value="<%=inputfirstname%>"><br>
+      <label for="lastname">Last name:</label>
+      <input type="text" id="lastname" name="lastname" class="required" value="<%=inputlastname%>"><br>
+      <input type="submit">
+
+      <input id="test" type="button" value="test">
+    </form>
+  </div>
 </body>
 </html>

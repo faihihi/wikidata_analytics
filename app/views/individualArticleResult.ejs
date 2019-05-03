@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+   <meta charset="utf-8">
+   <title>Individual Article Result</title>
+   <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <p>Title : <%= allResult.individualTitle %></p>
+  <p>Message : <%= allResult.updateMsg %></p>
+  <p>Number of revisions : <%= allResult.articleRevNumber %></p>
+  <p>top 5 regular users :
+    <% if (locals.allResult.leastNumRev) {for(var i=0; i < allResult.leastNumRev.length; i++) { %>
+        <%= allResult.leastNumRev[i] %>,
+    <% }} %>
+  </p>
+
+</body>
+</html>

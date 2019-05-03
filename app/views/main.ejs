@@ -27,7 +27,10 @@
       <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
       <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
     </div>
-    <p>The article edited by largest group of registered users :<%= allResult.largestRegUserRev%></p>
+    <p>The article edited by largest group of registered users : <%= allResult.largestRegUserRev%></p>
+    <p>The article edited by smallest group of registered users : <%= allResult.smallestRegUserRev%></p>
+    <p>The top 2 articles with the longest history (measured by age) : <%= allResult.longestHistory1%>, <%= allResult.longestHistory2%></p>
+    <p>Article with the shortest history (measured by age) : <%= allResult.youngestHistory%></p>
 
     <div id="overallBarChartSec"></div>
     <div id="overallPieChartSec"></div>
@@ -42,7 +45,7 @@
       <% } %>
     </select>
     <input id="selectArticleSubmit" type="submit" value="Select">
-    <p id="individualTitle"></p>
+    <div id="individualTitle"></div>
   </div>
 
   <!--

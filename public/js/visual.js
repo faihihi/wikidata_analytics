@@ -19,15 +19,23 @@ $(document).ready(function(){
       var article = $('#selectArticle').val();
       console.log(article);
       var encodedArticle = encodeURIComponent(article);
-      $ajax(
+      //var parameter = {articletitle: $('#selectArticle').val()};
+      $.get("/main/article?title=" + encodedArticle, function(result) {
+        console.log("this function ran");
+        $('#individualTitle').html(result);
+      });
+
+      /*
+      $.ajax({
         type: "GET",
-        url: "/main/revisions?title=" + encodedArticle,
+        url: "/main/article?title=" + encodedArticle,
         dataType: "json",
-        success: function(data){
-          //$('#individualTitle').html(data.message);
+        success: function(result){
+          console.log("this function ran");
+          $('#individualTitle').html(result);
         }
 
-      );
+      });*/
     });
 
 

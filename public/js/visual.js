@@ -5,6 +5,7 @@ google.charts.setOnLoadCallback(drawOverallPieChart);
 
 
 $(document).ready(function(){
+    //For getting article by overall number of least/most revisions
     $('#numOfArticleSubmit').on('click', function(e){
       var getnumber = $('#number').val();
       console.log(getnumber);
@@ -12,6 +13,21 @@ $(document).ready(function(){
       $.get('/main/getHighLowRev', parameters, function(result) {
           $('#numHighLowResult').html(result);
       });
+    });
+
+    $('#selectArticleSubmit').on('click', function(e){
+      var article = $('#selectArticle').val();
+      console.log(article);
+      var encodedArticle = encodeURIComponent(article);
+      $ajax(
+        type: "GET",
+        url: "/main/revisions?title=" + encodedArticle,
+        dataType: "json",
+        success: function(data){
+          //$('#individualTitle').html(data.message);
+        }
+
+      );
     });
 
 
@@ -60,16 +76,12 @@ function drawOverallPieChart(){
 
   var str = "";
   var tooltip = [];
-  console.log(overallRevAdminType);
+  //console.log(overallRevAdminType);
   overallRevAdminType.forEach(function(field){
-    console.log(field._id + field.numbOfRev);
-    //var eachtype = [field._id, field.numbOfRev];
-    //admintype.push(eachtype);
+    //console.log(field._id + field.numbOfRev);
     str = str + field._id + " " + field.numbOfRev + "<br>";
   })
   tooltip.push(str);
-  console.log(tooltip);
-  console.log(str);
 
   var data = google.visualization.arrayToDataTable(usertype);
   var options = {

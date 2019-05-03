@@ -76,10 +76,22 @@ module.exports.showMain = function(req, res) {
       parseAllResult(allResult, res, count, 'main.ejs');
     }
   });
+
+  Revision.articleDropDownList(function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.articleDropDownList = result;
+      count++;
+      parseAllResult(allResult, res, count, 'main.ejs');
+    }
+  });
+
+
 };
 
 function parseAllResult(allResult, res, count, viewfile){
-  if(count < 6){return;}
+  console.log(count);
+  if(count < 7){return;}
   else{res.render(viewfile, {allResult: allResult});}
 }
 
@@ -117,6 +129,3 @@ function parseHighLowRevResult(allResult, res, count, viewfile){
   if(count < 2){return;}
   else{res.render(viewfile, {allResult: allResult});}
 }
-
-
-//Get all article names

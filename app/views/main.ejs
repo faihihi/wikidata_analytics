@@ -1,59 +1,51 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
-   <meta charset="utf-8">
-   <title>COMP5347 Group Project</title>
-   <link rel="stylesheet" href="/css/style.css" />
-   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-   <script type="text/javascript" src="/js/visual.js"></script>
+  <meta charset="utf-8">
+  <title>COMP5347 Group Project</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="/js/visual.js"></script>
 
 </head>
+
 <body>
   <script type="text/javascript">
-		var overallBarChart = <%- JSON.stringify(allResult.overallBarChart) %>;
+    var overallBarChart = <%- JSON.stringify(allResult.overallBarChart) %>;
     var overallPieChart = <%- JSON.stringify(allResult.overallPieChart) %>;
     var overallRevAdminType = <%- JSON.stringify(allResult.overallRevAdminType) %>;
+  </script>
 
-	</script>
-<!--
-<div id="searchfield">
-  <form method="GET" action="/main/getResult">
-    <label>Title:</label>
-    <input id="title" type="text" name="title"><br>
-    <input id="querySubmit" type="submit" value="Search">
-    <input type="reset" value="Clear">
-  </form>
-</div>
--->
+  <div id="overallSection">
+    <h2>Overall Analytics</h2>
+    <label>Number of Article:</label>
+    <input id="number" type="text" name="title">
+    <input id="numOfArticleSubmit" type="submit" value="Search">
+    <div id="numHighLowResult">
+      <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
+      <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
+    </div>
+    <p>The article edited by largest group of registered users :<%= allResult.largestRegUserRev%></p>
 
-
-<div id="overallSection">
-  <h2>Overall Analytics</h2>
-  <label>Number of Article:</label>
-  <input id="number" type="text" name="title">
-  <input id="numOfArticleSubmit" type="submit" value="Search">
-  <div id="numHighLowResult">
-    <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
-    <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
+    <div id="overallBarChartSec"></div>
+    <div id="overallPieChartSec"></div>
   </div>
-  <p>The article edited by largest group of registered users :<%= allResult.largestRegUserRev%></p>
 
-  <div id="overallBarChartSec"></div>
-  <div id="overallPieChartSec"></div>
-</div>
+  <div id="individualSection">
+    <h2>Individual Article Analytics</h2>
+    <select id="selectArticle" name="article">
+      <option>Choose an Article</option>
+      <% for(var i = 0; i < allResult.articleDropDownList.length;i++){ %>
+      <option value="<%=allResult.articleDropDownList[i]%>"><%=allResult.articleDropDownList[i]%></option>
+      <% } %>
+    </select>
+    <input id="selectArticleSubmit" type="submit" value="Select">
+    <p id="individualTitle"></p>
+  </div>
 
-<div id="individualSection">
-  <h2>Individual Article Analytics</h2>
-  <select id="select1" name="article">
-    <option>Choose an Article</option>
-    <% for(var i = 0; i < overallData.fileList.length; i++){ %>
-      <option value="<%- overallData.fileList[i] %>"><%= overallData.fileList[i] %> </option>
-    <% } %>	
-  </select>
-</div>
-
-<!--
+  <!--
 <table>
   <tr>
     <th>Field Name</th>
@@ -74,4 +66,5 @@
 -->
 
 </body>
+
 </html>

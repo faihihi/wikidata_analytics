@@ -162,6 +162,11 @@ RevisionSchema.statics.top5RegUsers = function(title, callback){
 	.exec(callback)
 }
 
+//Update data after calling API
+RevisionSchema.statics.updateData = function(wikiData, callback){
+	return this.insertMany(wikiData, {}, function(error, result){callback();});
+}
+
 var Revision = mongoose.model('Revision', RevisionSchema, 'revisions')
 
 module.exports = Revision

@@ -23,6 +23,7 @@ $(document).ready(function(){
       $.get("/main/article?title=" + encodedArticle, function(result) {
         console.log("this function ran");
         $('#individualTitle').html(result);
+        //$('#individualTitle').html(result.message);
       });
 
       /*

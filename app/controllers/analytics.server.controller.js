@@ -159,7 +159,6 @@ module.exports.getHighLowRev = function(req, res) {
       for(var i=0;i<numberofarticle;i++){
         allResult.mostNumRev[i] = result[i]._id;
       }
-      //res.render('highestRevision.ejs', {allResult: allResult});
       allResult.numberOfArticle = numberofarticle;
       count++;
       parseHighLowRevResult(allResult, res, count, 'highLowRevResult.ejs');
@@ -185,8 +184,7 @@ function parseHighLowRevResult(allResult, res, count, viewfile){
 }
 
 //Get Individual data analytics results and render to individualArticleResult.ejs
-module.exports.getIndividualResult = function(req, res) {
-  console.log("getIndividualRestult ran");
+module.exports.showIndividualResult = function(req, res) {
   var wikiEndpointHost = "en.wikipedia.org",
   path = "/w/api.php"
   parameters = [
@@ -227,30 +225,14 @@ module.exports.getIndividualResult = function(req, res) {
       console.log("current: " + currentDate.toISOString() + " Articlate Rev: " + result[0].timestamp);
       var dateDiff = currentDate - articleLatestRev;
       var oneDay = 24 * 60 * 60 * 1000;
-      console.log(dateDiff + " compare " + oneDay);
+      //console.log(dateDiff + " compare " + oneDay);
       if(dateDiff < oneDay){
         //ALREADY UPDATED
         allResult.updateMsg = "The data is Up-to-Date!";
         count++;
         parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
         //FROM HERE
-        Revision.articleRevNumber(title, function(err, result){
-          if(err){console.log("ERROR");}
-          else{
-            allResult.articleRevNumber = result;
-            count++;
-            parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
-          }
-        });
-
-        Revision.top5RegUsers(title, function(err, result){
-          if(err){console.log("ERROR");}
-          else{
-            allResult.top5RegUsers = result;
-            count++;
-            parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
-          }
-        });
+        getIndividualResult(title, res, allResult, count);
         //TO HERE
 
       }
@@ -265,8 +247,9 @@ module.exports.getIndividualResult = function(req, res) {
             count++;
             parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
 
-            //Set usertype for updated users
+            //Set usertype, admintype, registered fields for updated users
             for(var i in revisions){
+              revisions[i].title = title;
               //console.log(revisions[i]);
               if(revisions[i].hasOwnProperty("anon")){
                 revisions[i].usertype = "anon";
@@ -274,22 +257,22 @@ module.exports.getIndividualResult = function(req, res) {
               }
               else if(admin_active.indexOf(revisions[i].user) > -1){
                 revisions[i].usertype = "admin";
-                revisions[i].admintype = "admin_active";
+                revisions[i].admintype = "active";
                 revisions[i].registered = true;
               }
               else if(admin_former.indexOf(revisions[i].user) > -1){
                 revisions[i].usertype = "admin";
-                revisions[i].admintype = "admin_former";
+                revisions[i].admintype = "former";
                 revisions[i].registered = true;
               }
               else if(admin_inactive.indexOf(revisions[i].user) > -1){
                 revisions[i].usertype = "admin";
-                revisions[i].admintype = "admin_inactive";
+                revisions[i].admintype = "inactive";
                 revisions[i].registered = true;
               }
               else if(admin_semi_active.indexOf(revisions[i].user) > -1){
                 revisions[i].usertype = "admin";
-                revisions[i].admintype = "admin_semi_active";
+                revisions[i].admintype = "semi-active";
                 revisions[i].registered = true;
               }
               else if(bot.indexOf(revisions[i].user) > -1){
@@ -301,65 +284,17 @@ module.exports.getIndividualResult = function(req, res) {
                 revisions[i].registered = false;
               }
             }
-
-            Revision.updateData(revisions, function(err, result){
+            //Insert data to mongoDB
+            Revision.addData(revisions, function(err, result){
               if(err){console.log("ERROR");}
               else{
+                console.log("this function called AFTER UPDATE");
                 //FROM HERE
-                Revision.articleRevNumber(title, function(err, result){
-                  if(err){console.log("ERROR");}
-                  else{
-                    allResult.articleRevNumber = result;
-                    console.log("This is rannnnnn!");
-                    count++;
-                    parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
-                  }
-                });
-
-                Revision.top5RegUsers(title, function(err, result){
-                  if(err){console.log("ERROR");}
-                  else{
-                    allResult.leastNumRev = [];
-                    //allResult.top5RegUsers1 = result[0];
-                    for(var i=0;i<5;i++){
-                      allResult.leastNumRev[i] = result[i]._id;
-                    }
-                    count++;
-                    parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
-                  }
-                });
+                getIndividualResult(title, res, allResult, count);
                 //TO HERE
               }
             });
-            //UP TO HEREEE
-
         });
-
-        /*
-        https.get(options,function(res){
-          var data ='';
-          res.on('data',function(chunk){
-              data += chunk;
-              //console.log(data);
-          })
-          res.on('end',function(){
-              json = JSON.parse(data);
-              pages = json.query.pages;
-              revisions = pages[Object.keys(pages)[0]].revisions;
-              revisions.splice(0, 1)
-              //console.log(revisions);
-
-              var users=[]
-              for (revid in revisions){
-                  users.push(revisions[revid].user);
-              }
-              uniqueUsers = new Set(users);
-              console.log("The new revisions are made by " + uniqueUsers.size + " unique users");
-
-          })
-        }).on('error',function(e){
-            console.log(e);
-        })*/
 
       }
     }
@@ -371,10 +306,10 @@ function parseIndividualResult(allResult, res, count, viewfile){
   if(count < 3){return;}
   else{
     res.render(viewfile, {allResult: allResult});
-    //res.json(allResult);
   }
 }
 
+//Get new revisions data from Wikipedia
 pullWikiData = function(options, callback){
   console.log("pullwiki data function ran!!");
   https.get(options,function(res){
@@ -401,4 +336,28 @@ pullWikiData = function(options, callback){
   }).on('error',function(e){
       console.log(e);
   })
+}
+
+function getIndividualResult(title, res, allResult, count){
+  Revision.articleRevNumber(title, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.articleRevNumber = result;
+      count++;
+      parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
+
+  Revision.top5RegUsers(title, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.leastNumRev = [];
+      //allResult.top5RegUsers1 = result[0];
+      for(var i=0;i<result.length;i++){
+        allResult.leastNumRev[i] = result[i]._id;
+      }
+      count++;
+      parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
 }

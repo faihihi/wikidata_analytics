@@ -8,7 +8,10 @@ var RevisionSchema = new mongoose.Schema({
 	title: String,
 	timestamp:String,
 	user:String,
-	anon:String
+	anon:String,
+	usertype:String,
+	registered:Boolean,
+	admintype:String
 },{
 	versionKey: false
 });
@@ -163,8 +166,26 @@ RevisionSchema.statics.top5RegUsers = function(title, callback){
 }
 
 //Update data after calling API
-RevisionSchema.statics.updateData = function(wikiData, callback){
-	return this.insertMany(wikiData, {}, function(error, result){callback();});
+RevisionSchema.statics.addData = function(wikiData, callback){
+	var empty = true;
+	for(var i in wikiData){
+		if(wikiData.hasOwnProperty(i)){
+			empty = false;
+		}
+	}
+
+	if(!empty){
+		//console.log(wikiData);
+		return this.insertMany(wikiData, function(err, result){
+			if(err){console.log(err);}
+			//console.log(result);
+			callback();
+		});
+	}
+	else{
+		return callback()
+	}
+
 }
 
 var Revision = mongoose.model('Revision', RevisionSchema, 'revisions')

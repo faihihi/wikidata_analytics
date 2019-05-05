@@ -21,22 +21,8 @@ $(document).ready(function(){
       var encodedArticle = encodeURIComponent(article);
       //var parameter = {articletitle: $('#selectArticle').val()};
       $.get("/main/article?title=" + encodedArticle, function(result) {
-        console.log("this function ran");
         $('#individualTitle').html(result);
-        //$('#individualTitle').html(result.message);
       });
-
-      /*
-      $.ajax({
-        type: "GET",
-        url: "/main/article?title=" + encodedArticle,
-        dataType: "json",
-        success: function(result){
-          console.log("this function ran");
-          $('#individualTitle').html(result);
-        }
-
-      });*/
     });
 
 
@@ -76,13 +62,16 @@ function drawOverallBarChart(){
 
 function drawOverallPieChart(){
   var usertype = [['user type', 'number of revision']];
+  var pieindex;
+  var i = 0;
   //console.log(overallPieChart);
   overallPieChart.forEach(function(field){
     //console.log(field.usertype + field.numbOfRev);
     var piesection = [field.usertype, field.numbOfRev];
     usertype.push(piesection);
+    if(field.usertype == "admin"){pieindex = i;}
+    i++;
   })
-
   var str = "";
   var tooltip = [];
   //console.log(overallRevAdminType);
@@ -106,7 +95,9 @@ function drawOverallPieChart(){
     chart.setSelection([e]);
     try {
       selection = chart.getSelection();
-      sliceid = selection[0].row -1;
+      //console.log(selection);
+      sliceid = selection[0].row - pieindex;
+      //console.log("sliceid: " + sliceid);
     }
     catch(err) {
       ;

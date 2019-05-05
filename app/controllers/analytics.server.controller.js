@@ -294,16 +294,15 @@ module.exports.showIndividualResult = function(req, res) {
                 //TO HERE
               }
             });
-        });
-
+          });
+        }
       }
-    }
-  });
+    });
 }
 
 function parseIndividualResult(allResult, res, count, viewfile){
   console.log(count);
-  if(count < 3){return;}
+  if(count < 6){return;}
   else{
     res.render(viewfile, {allResult: allResult});
   }
@@ -356,6 +355,34 @@ function getIndividualResult(title, res, allResult, count){
       for(var i=0;i<result.length;i++){
         allResult.leastNumRev[i] = result[i]._id;
       }
+      count++;
+      parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
+
+  Revision.articleBarChart(title, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.articleBarChart = result;
+      count++;
+      parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
+
+  Revision.articlePieChart(title, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.articlePieChart = result;
+      count++;
+      parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
+
+  //Get number of revisions by type of admin for Pie chart
+  Revision.articleAdminType(title, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.articleAdminType = result;
       count++;
       parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
     }

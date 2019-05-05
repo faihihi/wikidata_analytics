@@ -4,16 +4,27 @@
    <meta charset="utf-8">
    <title>Individual Article Result</title>
    <link rel="stylesheet" href="/css/style.css" />
+   <script type="text/javascript" src="/js/visual.js"></script>
 </head>
 <body>
+  <script type="text/javascript">
+    var articleTitle = <%- JSON.stringify(allResult.articleBarChart) %>;
+    var articleBarChart = <%- JSON.stringify(allResult.articleBarChart) %>;
+    var articlePieChart = <%- JSON.stringify(allResult.articlePieChart) %>;
+    var articleAdminType = <%- JSON.stringify(allResult.articleAdminType) %>;
+  </script>
+
   <p>Title : <%= allResult.individualTitle %></p>
   <p>Message : <%= allResult.updateMsg %></p>
   <p>Number of revisions : <%= allResult.articleRevNumber %></p>
-  <p>top 5 regular users :
+  <p>Top 5 regular users :
     <% if (locals.allResult.leastNumRev) {for(var i=0; i < allResult.leastNumRev.length; i++) { %>
         <%= allResult.leastNumRev[i] %>,
     <% }} %>
   </p>
+
+  <div id="articleBarChartSec"></div>
+  <div id="articlePieChartSec"></div>
 
 </body>
 </html>

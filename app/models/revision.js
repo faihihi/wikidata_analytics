@@ -173,7 +173,6 @@ RevisionSchema.statics.addData = function(wikiData, callback){
 			empty = false;
 		}
 	}
-
 	if(!empty){
 		//console.log(wikiData);
 		return this.insertMany(wikiData, function(err, result){
@@ -185,7 +184,70 @@ RevisionSchema.statics.addData = function(wikiData, callback){
 	else{
 		return callback()
 	}
+}
 
+//Individual Article #4: Bar chart of revision number distributed by year and by user type for this article
+RevisionSchema.statics.articleBarChart = function(title, callback){
+	var query = [
+		{$match: {"title": title}},
+		{$project: {
+			year: {$substr: ["$timestamp", 0, 4]},
+			usertype: "$usertype"
+		}},
+    {$group: {_id: {year:"$year", usertype:"$usertype"}, numbOfRev: {$sum: 1}}},
+    {$project: {
+			_id: 0,
+			year: "$_id.year",
+			usertype:"$_id.usertype",
+      numbOfRev: "$numbOfRev"
+    }},
+		{$sort: {"year": 1}}
+	]
+	return this.aggregate(query)
+	.exec(callback)
+}
+
+//Individual Article #5: Pie chart of revision number distribution based on user type for this article
+RevisionSchema.statics.articlePieChart = function(title, callback){
+	var query = [
+		{$match: {"title": title}},
+		{$group: {_id: {usertype:"$usertype"}, numbOfRev: {$sum: 1}}},
+    {$project: {
+				_id: 0,
+				usertype:"$_id.usertype",
+        numbOfRev: "$numbOfRev"
+    }}
+	]
+	return this.aggregate(query)
+	.exec(callback)
+}
+
+//Individual Article #5: Get number of revisions of this article by type of admin
+RevisionSchema.statics.articleAdminType = function(title, callback){
+	var query = [
+		{$match:{"title": title, usertype : "admin"}},
+    {$group: {_id: "$admintype", numbOfRev: {$sum: 1}}},
+    {$project: {
+				admintype:"$admintype",
+        numbOfRev: "$numbOfRev"
+    }}
+	]
+	return this.aggregate(query)
+	.exec(callback)
+}
+
+//Individual Article #6: Bar chart of revision number distributed by year made by one or a few of the top 5 users for this article
+RevisionSchema.statics.articleBarChartTop5 = function(title, topusers, callback){
+	var query = [
+		{$match: {"title": title, "user": {'$in': topusers}}},
+		{$project: {
+			year: {$substr: ["$timestamp", 0, 4]},
+		}},
+		{$group: {_id: "$year", numbOfRev: {$sum:1}}},
+		{$sort: {"_id": 1}}
+	]
+	return this.aggregate(query)
+	.exec(callback)
 }
 
 var Revision = mongoose.model('Revision', RevisionSchema, 'revisions')

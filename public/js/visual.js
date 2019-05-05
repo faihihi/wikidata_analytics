@@ -2,6 +2,8 @@ google.charts.load('current', {packages: ['corechart']});
 google.load("visualization", "1", {packages:["corechart"]});
 google.charts.setOnLoadCallback(drawOverallBarChart);
 google.charts.setOnLoadCallback(drawOverallPieChart);
+google.charts.setOnLoadCallback(drawArticleBarChart);
+google.charts.setOnLoadCallback(drawArticlePieChart);
 
 
 $(document).ready(function(){
@@ -11,6 +13,8 @@ $(document).ready(function(){
       console.log(getnumber);
       var parameters = {numberofarticle: $('#number').val() };
       $.get('/main/getHighLowRev', parameters, function(result) {
+          drawArticleBarChart();
+          drawArticlePieChart();
           $('#numHighLowResult').html(result);
       });
     });
@@ -24,9 +28,6 @@ $(document).ready(function(){
         $('#individualTitle').html(result);
       });
     });
-
-
-
 });
 
 
@@ -41,23 +42,28 @@ function drawOverallBarChart(){
     jsondata[field.year][field.usertype] = parseInt(field.numbOfRev);
   })
 
-  var bar = [['Year', 'Administrator', 'Anonymous', 'Bot', 'Regular']];
-  for(var row in jsondata){
-    var barRow = [row];
-    barRow.push(jsondata[row].admin);
-    barRow.push(jsondata[row].anon);
-    barRow.push(jsondata[row].bot);
-    barRow.push(jsondata[row].regular);
-    bar.push(barRow);
+  var chartTitle = "Revision number distribution by year and by user type across the whole dataset";
+  var htmlSection = "#overallBarChartSec";
+  createBarChart(jsondata, chartTitle, htmlSection);
+}
+
+
+function drawArticleBarChart(){
+  var jsondata = {};
+  if (typeof articleBarChart === 'undefined'){
+    console.log("do nothing");
   }
-  var data = google.visualization.arrayToDataTable(bar);
-  var options = {
-      'title':"Revision number distribution by year and by user type across the whole dataset",
-      'width':850,
-      'height':450
-  };
-  var chart = new google.visualization.ColumnChart($("#overallBarChartSec")[0]);
-  chart.draw(data, options);
+  else{
+    articleBarChart.forEach(function(field){
+      if(!jsondata[field.year]){
+        jsondata[field.year] = {};
+      }
+      jsondata[field.year][field.usertype] = parseInt(field.numbOfRev);
+    })
+    var chartTitle = "Revision number distributed by year and by user type of the article: " + $('#selectArticle').val();
+    var htmlSection = "#articleBarChartSec";
+    createBarChart(jsondata, chartTitle, htmlSection);
+  }
 }
 
 function drawOverallPieChart(){
@@ -80,15 +86,68 @@ function drawOverallPieChart(){
     str = str + field._id + " " + field.numbOfRev + "<br>";
   })
   tooltip.push(str);
+  var chartTitle = "Revision number distribution by user type across the whole data set";
+  var htmlSection = "#overallPieChartSec";
+  createPieChart(usertype, chartTitle, tooltip, htmlSection, pieindex);
+}
 
+function drawArticlePieChart(){
+  if (typeof articlePieChart != 'undefined'){
+    var usertype = [['user type', 'number of revision']];
+    var pieindex;
+    var i = 0;
+    articlePieChart.forEach(function(field){
+      var piesection = [field.usertype, field.numbOfRev];
+      usertype.push(piesection);
+      if(field.usertype == "admin"){pieindex = i;}
+      i++;
+    })
+    var str = "";
+    var tooltip = [];
+    articleAdminType.forEach(function(field){
+      str = str + field._id + " " + field.numbOfRev + "<br>";
+    })
+    tooltip.push(str);
+    var chartTitle = "Revision number distribution by user type of the article: " + $('#selectArticle').val();
+    var htmlSection = "#articlePieChartSec";
+    createPieChart(usertype, chartTitle, tooltip, htmlSection, pieindex);
+  }
+}
+
+
+
+
+
+
+function createBarChart(jsondata, chartTitle, htmlSection){
+  var bar = [['Year', 'Administrator', 'Anonymous', 'Bot', 'Regular']];
+  for(var row in jsondata){
+    var barRow = [row];
+    barRow.push(jsondata[row].admin);
+    barRow.push(jsondata[row].anon);
+    barRow.push(jsondata[row].bot);
+    barRow.push(jsondata[row].regular);
+    bar.push(barRow);
+  }
+  var data = google.visualization.arrayToDataTable(bar);
+  var options = {
+      'title': chartTitle,
+      'width':850,
+      'height':450
+  };
+  var chart = new google.visualization.ColumnChart($(htmlSection)[0]);
+  chart.draw(data, options);
+}
+
+function createPieChart(usertype, chartTitle, tooltip, htmlSection, pieindex){
   var data = google.visualization.arrayToDataTable(usertype);
   var options = {
-      'title':"Revision number distribution by user type across the whole data set",
+      'title':chartTitle,
       'width':850,
       'height':450,
       tooltip: { isHtml: true }
   };
-  var chart = new google.visualization.PieChart($("#overallPieChartSec")[0]);
+  var chart = new google.visualization.PieChart($(htmlSection)[0]);
 
   var sliceid = 0;
   function eventHandler(e){
@@ -106,37 +165,5 @@ function drawOverallPieChart(){
     $(".google-visualization-tooltip-item-list li:eq(1)").html(tooltip[sliceid]).css("font-family", "Arial");
   }
   google.visualization.events.addListener(chart, 'onmouseover', eventHandler);
-
-  chart.draw(data, options);
-}
-
-
-
-//Drawing bar chart for individual article
-function drawBarChartofArticle(json){
-  var jsondata = {};
-  json.forEach(function(field){
-    if(!jsondata[field.year]){
-      jsondata[field.year] = {};
-    }
-    jsondata[field.year][field.usertype] = field.numOfUser;
-  })
-
-  var bar = [['year', 'admin', 'anon', 'bot', 'regular']];
-  for(var row in jsondata){
-    var barRow = [row];
-    barRow.push(jsondata[row].admin);
-    barRow.push(jsondata[row].anon);
-    barRow.push(jsondata[row].bot);
-    barRow.push(jsondata[row].regular);
-    bar.push(barRow);
-  }
-  var data = google.visualization.arrayToDataTable(bar);
-  var options = {
-      'title':"Revision distribution by year and by user type for this article",
-      'width':870,
-      'height':300
-  };
-  var chart = new google.visualization.ColumnChart($("#barChartforArticle")[0]);
   chart.draw(data, options);
 }

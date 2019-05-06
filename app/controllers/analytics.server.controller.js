@@ -411,14 +411,25 @@ function getIndividualResult(title, res, allResult, count){
 
 
 module.exports.getIndividualBarChartTop5 = function(req, res) {
-  var topusers = req.query.user;
+  var title = req.query.title;
+  var topusers = req.query.topusers;
   var from = req.query.from;
   var to = req.query.to;
-  console.log("on server: " + user + " " + from + " " + to);
+  console.log("on server: " + topusers + " " + from + " " + to);
   var allResult = {};
+  var usersArray = topusers.split(',');
 
-  Revision.articleBarChartTop5(title, topusers, from, to, function(err, result){
-    if(err){console.log("ERROR");}
+  var fromTimestamp = new Date(Date.UTC(from,'00','01','00','00','00'));
+  fromTimestamp = fromTimestamp.getTime()/1000;
+  console.log(fromTimestamp);
+
+  var toTimestamp = new Date(Date.UTC(to+1,'00','01','00','00','00'));
+  toTimestamp = toTimestamp.getTime()/1000;
+  console.log(toTimestamp);
+
+
+  Revision.articleBarChartTop5(title, usersArray, fromTimestamp, toTimestamp, function(err, result){
+    if(err){console.log(err);}
     else{
       allResult.articleBarChartTop5 = result;
       res.render('finalBarChartTop5.ejs', {allResult: allResult});

@@ -4,6 +4,7 @@ google.charts.setOnLoadCallback(drawOverallBarChart);
 google.charts.setOnLoadCallback(drawOverallPieChart);
 google.charts.setOnLoadCallback(drawArticleBarChart);
 google.charts.setOnLoadCallback(drawArticlePieChart);
+google.charts.setOnLoadCallback(drawArticleBarChartTop5Users);
 
 
 $(document).ready(function(){
@@ -31,8 +32,8 @@ $(document).ready(function(){
     });
 
     $('#selectUserYrSubmit').on('click', function(e){
-      //var year = $('#yearInputId').val();
-      var user = $('#selectUser').val();
+      var article = $('#selectArticle').val();
+      var topusers = $('#selectUser').val();
       var from = $('#selectMinYear').val();
       var to = $('#selectMaxYear').val();
       if(from >= to){
@@ -40,19 +41,22 @@ $(document).ready(function(){
         $('#errormsg').html("Invalid year range. Please select the year range again.")
         e.preventDefault();
       }
-      else if(user == "" || from == "" || to == ""){
+      else if(topusers == null || from == null || to == null){
         console.log("not all selected");
         $('#errormsg').html("Some fields are not selected. Please select all fields.")
         e.preventDefault();
       }
       else{
-        var encodedUser = encodeURIComponent(user);
-        var route = "/main/article/getBar?user=" + encodedUser + "&from=" + from + "&to=" + to;
-        console.log(from + " " + to + " " + user);
+        var encodedArticle = encodeURIComponent(article);
+        var encodedUser = encodeURIComponent(topusers);
+        var route = "/main/article/getBar?title=" + encodedArticle + "&topusers=" + encodedUser + "&from=" + from + "&to=" + to;
+        console.log(from + " " + to + " " + topusers);
+        console.log(route);
         //console.log(typeof(user));
         $.get(route, function(result) {
           console.log(result);
-          //$('#individualTitleFinalBarChart').html(result)
+          drawArticleBarChartTop5Users();
+          $('#individualTitleTop5BarChart').html(result)
         });
       }
     });
@@ -93,6 +97,31 @@ function drawArticleBarChart(){
     var chartTitle = "Revision number distributed by year and by user type of the article: " + $('#selectArticle').val();
     var htmlSection = "#articleBarChartSec";
     createBarChart(jsondata, chartTitle, htmlSection);
+  }
+}
+
+function drawArticleBarChartTop5Users(){
+  var array = [['Year', 'Number of revisions']];
+  if (typeof articleBarChartTop5 === 'undefined'){
+    //console.log("do nothing");
+  }
+  else{
+    articleBarChartTop5.forEach(function(field){
+      //console.log(parseInt(field._id) + " " + parseInt(field.numbOfRev));
+      array.push([field._id, parseInt(field.numbOfRev)]);
+    })
+    var data = google.visualization.arrayToDataTable(array);
+
+    var options = {
+      'width': 850,
+      'height': 300,
+      'title': "Revision number distributed by year made by one or a few of the top 5 users for this article",
+      hAxis: {
+        title: 'timestamp'
+      }
+    };
+    var chart = new google.visualization.ColumnChart($("#articleBarChartTop5Sec")[0]);
+    chart.draw(data, options);
   }
 }
 

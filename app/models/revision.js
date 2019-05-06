@@ -237,9 +237,9 @@ RevisionSchema.statics.articleAdminType = function(title, callback){
 }
 
 //Individual Article #6: Bar chart of revision number distributed by year made by one or a few of the top 5 users for this article
-RevisionSchema.statics.articleBarChartTop5 = function(title, topusers, from, to, callback){
+RevisionSchema.statics.articleBarChartTop5 = function(title, usersArray, from, to, callback){
 	var query = [
-		{$match: {"title": title, "user": {'$in': topusers}}},
+		{$match: {"title": title, "user": {'$in': usersArray}}},
 		{$project: {
 			year: {$substr: ["$timestamp", 0, 4]},
 		}},

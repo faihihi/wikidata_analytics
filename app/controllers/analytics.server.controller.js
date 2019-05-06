@@ -302,7 +302,7 @@ module.exports.showIndividualResult = function(req, res) {
 
 function parseIndividualResult(allResult, res, count, viewfile){
   console.log(count);
-  if(count < 6){return;}
+  if(count < 7){return;}
   else{
     res.render(viewfile, {allResult: allResult});
   }
@@ -350,10 +350,10 @@ function getIndividualResult(title, res, allResult, count){
   Revision.top5RegUsers(title, function(err, result){
     if(err){console.log("ERROR");}
     else{
-      allResult.leastNumRev = [];
+      allResult.top5users = [];
       //allResult.top5RegUsers1 = result[0];
       for(var i=0;i<result.length;i++){
-        allResult.leastNumRev[i] = result[i]._id;
+        allResult.top5users[i] = result[i]._id;
       }
       count++;
       parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
@@ -385,6 +385,43 @@ function getIndividualResult(title, res, allResult, count){
       allResult.articleAdminType = result;
       count++;
       parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
+
+  Revision.articleYearList(title, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      for(var i=0;i<result.length;i++){
+        for(var j=0;j<result.length-i-1;j++){
+            if(result[j]._id > result[j+1]._id){
+              //console.log("swap" + result[j]._id + " " + result[j+1]._id);
+              var temp = result[j]._id;
+              result[j]._id = result[j+1]._id;
+              result[j+1]._id = temp;
+            }
+        }
+      }
+      allResult.articleYearList = result;
+
+      count++;
+      parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
+    }
+  });
+}
+
+
+module.exports.getIndividualBarChartTop5 = function(req, res) {
+  var topusers = req.query.user;
+  var from = req.query.from;
+  var to = req.query.to;
+  console.log("on server: " + user + " " + from + " " + to);
+  var allResult = {};
+
+  Revision.articleBarChartTop5(title, topusers, from, to, function(err, result){
+    if(err){console.log("ERROR");}
+    else{
+      allResult.articleBarChartTop5 = result;
+      res.render('finalBarChartTop5.ejs', {allResult: allResult});
     }
   });
 }

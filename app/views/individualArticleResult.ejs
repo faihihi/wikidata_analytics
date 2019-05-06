@@ -18,13 +18,43 @@
   <p>Message : <%= allResult.updateMsg %></p>
   <p>Number of revisions : <%= allResult.articleRevNumber %></p>
   <p>Top 5 regular users :
-    <% if (locals.allResult.leastNumRev) {for(var i=0; i < allResult.leastNumRev.length; i++) { %>
-        <%= allResult.leastNumRev[i] %>,
+    <% if (locals.allResult.top5users) {for(var i=0; i < allResult.top5users.length; i++) { %>
+        <%= allResult.top5users[i] %>,
     <% }} %>
   </p>
 
   <div id="articleBarChartSec"></div>
   <div id="articlePieChartSec"></div>
+
+
+  <select id="selectUser" name="user" multiple>
+    <option>Choose a user</option>
+    <% for(var i = 0; i < allResult.top5users.length;i++){ %>
+    <option value="<%=allResult.top5users[i]%>"><%=allResult.top5users[i]%></option>
+    <% } %>
+  </select>
+
+  <select id="selectMinYear" name="minyear">
+    <option>From</option>
+    <% for(var i = 0; i < allResult.articleYearList.length;i++){ %>
+    <option value="<%=allResult.articleYearList[i]._id%>"><%=allResult.articleYearList[i]._id%></option>
+    <% } %>
+  </select>
+
+  <select id="selectMaxYear" name="maxyear">
+    <option>To</option>
+    <% for(var i = 0; i < allResult.articleYearList.length;i++){ %>
+    <option value="<%=allResult.articleYearList[i]._id%>"><%=allResult.articleYearList[i]._id%></option>
+    <% } %>
+  </select>
+
+
+<!--
+  <input type="range" name="yearInputName" id="yearInputId" min="<%=allResult.yearMin%>" max="<%=allResult.yearMax%>" value = "<%=allResult.yearMax%>" oninput="yearOutputId.value = yearInputId.value">
+  <output name="yearOutputName" id="yearOutputId"><%=allResult.yearMax%></output>
+-->
+  <input id="selectUserYrSubmit" type="submit" value="Submit">
+  <p id="errormsg"></p>
 
 </body>
 </html>

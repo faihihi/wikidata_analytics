@@ -25,9 +25,39 @@ $(document).ready(function(){
       var encodedArticle = encodeURIComponent(article);
       //var parameter = {articletitle: $('#selectArticle').val()};
       $.get("/main/article?title=" + encodedArticle, function(result) {
-        $('#individualTitle').html(result);
+        //console.log(result);
+        $('#individualTitle').html(result)
       });
     });
+
+    $('#selectUserYrSubmit').on('click', function(e){
+      //var year = $('#yearInputId').val();
+      var user = $('#selectUser').val();
+      var from = $('#selectMinYear').val();
+      var to = $('#selectMaxYear').val();
+      if(from >= to){
+        console.log("invalid range");
+        $('#errormsg').html("Invalid year range. Please select the year range again.")
+        e.preventDefault();
+      }
+      else if(user == "" || from == "" || to == ""){
+        console.log("not all selected");
+        $('#errormsg').html("Some fields are not selected. Please select all fields.")
+        e.preventDefault();
+      }
+      else{
+        var encodedUser = encodeURIComponent(user);
+        var route = "/main/article/getBar?user=" + encodedUser + "&from=" + from + "&to=" + to;
+        console.log(from + " " + to + " " + user);
+        //console.log(typeof(user));
+        $.get(route, function(result) {
+          console.log(result);
+          //$('#individualTitleFinalBarChart').html(result)
+        });
+      }
+    });
+
+
 });
 
 
@@ -51,7 +81,7 @@ function drawOverallBarChart(){
 function drawArticleBarChart(){
   var jsondata = {};
   if (typeof articleBarChart === 'undefined'){
-    console.log("do nothing");
+    //console.log("do nothing");
   }
   else{
     articleBarChart.forEach(function(field){

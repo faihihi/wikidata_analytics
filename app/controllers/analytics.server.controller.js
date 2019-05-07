@@ -436,3 +436,33 @@ module.exports.getIndividualBarChartTop5 = function(req, res) {
     }
   });
 }
+
+
+module.exports.showAuthorResult = function(req, res) {
+  var user = req.query.user;
+  allResult = {};
+  //console.log("On server: " + user);
+
+  Revision.authorAnalytics(user, function(err, result){
+    if(err){console.log(err);}
+    else{
+      allResult.authorAnalytics = result;
+      res.render('authorAnalyticsResult.ejs', {allResult: allResult});
+    }
+  });
+}
+
+module.exports.showTimestampResult = function(req, res) {
+  var user = req.query.user;
+  var title = req.query.title;
+  allResult = {};
+  //console.log("On server: " + user + " " + title);
+
+  Revision.getTimestamp(user, title, function(err, result){
+    if(err){console.log(err);}
+    else{
+      allResult.timestampResult = result;
+      res.render('timestampResult.ejs', {allResult: allResult});
+    }
+  });
+}

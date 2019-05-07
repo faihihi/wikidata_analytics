@@ -262,6 +262,34 @@ RevisionSchema.statics.articleYearList = function(title, callback){
 	.exec(callback)
 }
 
+//Author Analytics: Get article list and number of revision by user
+RevisionSchema.statics.authorAnalytics = function(user, callback){
+	var query = [
+		{$match: {"user": user}},
+		{$group: {_id: "$title", numbOfRev: {$sum:1}}},
+    {$project: {
+    	title: "$_id.title",
+    	numbOfRev: "$numbOfRev"}},
+		{$sort: {"_id": 1}}
+	]
+	return this.aggregate(query)
+	.exec(callback)
+}
+
+//Author Analytics: Get timestamp list of an article by user
+RevisionSchema.statics.getTimestamp = function(user, title, callback){
+	var query = [
+		{$match: {"user": user, "title": title}},
+    {$project: {
+      _id: 0,
+      title: "$title",
+      timestamp: "$timestamp"}},
+		{$sort: {"_id": 1}}
+	]
+	return this.aggregate(query)
+	.exec(callback)
+}
+
 var Revision = mongoose.model('Revision', RevisionSchema, 'revisions')
 
 module.exports = Revision

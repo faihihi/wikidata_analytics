@@ -8,7 +8,7 @@ google.charts.setOnLoadCallback(drawArticleBarChartTop5Users);
 
 
 $(document).ready(function(){
-    //For getting article by overall number of least/most revisions
+    //When submitted number of article, respond with number of least/most revisions for overall data
     $('#numOfArticleSubmit').on('click', function(e){
       var getnumber = $('#number').val();
       console.log(getnumber);
@@ -20,17 +20,18 @@ $(document).ready(function(){
       });
     });
 
+    //When submitted article title, respond with that article's data analytics
     $('#selectArticleSubmit').on('click', function(e){
       var article = $('#selectArticle').val();
       console.log(article);
       var encodedArticle = encodeURIComponent(article);
-      //var parameter = {articletitle: $('#selectArticle').val()};
       $.get("/main/article?title=" + encodedArticle, function(result) {
         //console.log(result);
         $('#individualTitle').html(result)
       });
     });
 
+    //When submitted user lists and year range of the article, respond with bar chart
     $('#selectUserYrSubmit').on('click', function(e){
       var article = $('#selectArticle').val();
       var topusers = $('#selectUser').val();
@@ -59,6 +60,28 @@ $(document).ready(function(){
           $('#individualTitleTop5BarChart').html(result)
         });
       }
+    });
+
+    //When submitted author's name, respond with that author's data analytics result
+    $('#selectAuthorSubmit').on('click', function(e){
+      var author = $('#selectAuthor').val();
+      var encodedAuthor = encodeURIComponent(author);
+      $.get("/main/author?user=" + encodedAuthor, function(result) {
+        //console.log(result);
+        $('#authorAnalyticsResult').html(result)
+      });
+    });
+
+    //When submitted article's title of an author, respond with list of revisions' timestamps
+    $('#selectAuthorArticleSubmit').on('click', function(e){
+      var author = $('#selectAuthor').val();
+      var encodedAuthor = encodeURIComponent(author);
+      var title = $('#selectAuthorArticle').val();
+      var encodedTitle = encodeURIComponent(title);
+      $.get("/main/author/showTimestamp?user=" + encodedAuthor + "&title=" + encodedTitle, function(result) {
+        //console.log(result);
+        $('#timestampResult').html(result)
+      });
     });
 
 

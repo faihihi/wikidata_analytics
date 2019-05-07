@@ -231,9 +231,7 @@ module.exports.showIndividualResult = function(req, res) {
         allResult.updateMsg = "The data is Up-to-Date!";
         count++;
         parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
-        //FROM HERE
         getIndividualResult(title, res, allResult, count);
-        //TO HERE
 
       }
       else{
@@ -289,9 +287,7 @@ module.exports.showIndividualResult = function(req, res) {
               if(err){console.log("ERROR");}
               else{
                 console.log("this function called AFTER UPDATE");
-                //FROM HERE
                 getIndividualResult(title, res, allResult, count);
-                //TO HERE
               }
             });
           });

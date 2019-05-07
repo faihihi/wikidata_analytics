@@ -174,7 +174,7 @@ RevisionSchema.statics.addData = function(wikiData, callback){
 		}
 	}
 	if(!empty){
-		//console.log(wikiData);
+		console.log(wikiData);
 		return this.insertMany(wikiData, function(err, result){
 			if(err){console.log(err);}
 			//console.log(result);

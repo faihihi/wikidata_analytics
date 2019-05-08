@@ -469,23 +469,18 @@ module.exports.getIndividualBarChartTop5 = function(req, res) {
   var title = req.query.title;
   var topusers = req.query.topusers;
   var from = req.query.from;
+  var yearfrom = (parseInt(from) - 1).toString();
   var to = req.query.to;
-  console.log("on server: " + topusers + " " + from + " " + to);
+  var yearto = (parseInt(to) + 1).toString();
+  //console.log("on server: " + topusers + " " + from + " " + to);
   var allResult = {};
   var usersArray = topusers.split(',');
 
-  var fromTimestamp = new Date(Date.UTC(from,'00','01','00','00','00'));
-  fromTimestamp = fromTimestamp.getTime()/1000;
-  console.log(fromTimestamp);
-
-  var toTimestamp = new Date(Date.UTC(to+1,'00','01','00','00','00'));
-  toTimestamp = toTimestamp.getTime()/1000;
-  console.log(toTimestamp);
-
-
-  Revision.articleBarChartTop5(title, usersArray, fromTimestamp, toTimestamp, function(err, result){
+  Revision.articleBarChartTop5(title, usersArray, yearfrom, yearto, function(err, result){
     if(err){console.log(err);}
     else{
+      //console.log(result);
+      allResult.usersArray = usersArray;
       allResult.articleBarChartTop5 = result;
       res.render('finalBarChartTop5.ejs', {allResult: allResult});
     }

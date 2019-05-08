@@ -134,25 +134,4 @@ Revision.update(
   }}
 );
 
-/*
-//Add year field for all revisions
-test = db.getCollection('revisions').aggregate(
-			{$project: {year: {$substr: ["$timestamp", 0, 4]}}}
-);
-test.forEach( function(x){ db.getCollection('revisions').update( {"_id":x._id}, {$set:{year:x.year}}, {multi:true}); })
-
-
-Revision.update(
-  {'user':{'$nin':allRegisteredUser},'anon':{$exists:false}},
-  {$set:{usertype:'regular',registered:false}},
-  {multi: true, upsert:true},
-  function(err,result){
-  if (err){console.log("ERROR")}
-  else{
-    console.log('year field has been updated/inserted');
-    console.log(result);
-  }}
-);
-*/
-
 //mongoose.disconnect();

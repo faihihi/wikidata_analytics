@@ -7,11 +7,33 @@ function drawArticleBarChartTop5Users(){
     //console.log("do nothing");
   }
   else{
+    var jsondata = {};
+    var arr = [];
+    arr.push('Year');
+    usersArray.forEach(function(field){
+      arr.push(field);
+    });
+
     articleBarChartTop5.forEach(function(field){
-      //console.log(parseInt(field._id) + " " + parseInt(field.numbOfRev));
-      array.push([field._id, parseInt(field.numbOfRev)]);
+      if(!jsondata[field.year]){
+        jsondata[field.year] = {};
+      }
+      //console.log(field.year + " " + field.user + " " + field.numbOfRev);
+      jsondata[field.year][field.user] = parseInt(field.numbOfRev);
     })
-    var data = google.visualization.arrayToDataTable(array);
+
+    var bar = [];
+    bar.push(arr);
+    //console.log(bar);
+    for(var row in jsondata){
+      var barRow = [row];
+      for(var i=0;i<usersArray.length;i++){
+        barRow.push(jsondata[row][usersArray[i]]);
+      }
+      bar.push(barRow);
+    }
+
+    var data = google.visualization.arrayToDataTable(bar);
 
     var options = {
       'width': 850,

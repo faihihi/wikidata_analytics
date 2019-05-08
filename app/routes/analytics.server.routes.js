@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', controller.showForm);
 
 //change back to this later
-router.post('/main', controller.showMain);
+router.post('/main', controller.addUser);
 router.get('/main', controller.showMain);
 router.get('/main/getHighLowRev', controller.getHighLowRev);
 router.get('/main/article', controller.showIndividualResult);

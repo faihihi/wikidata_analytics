@@ -1,9 +1,9 @@
 var express = require('express');
 var Revision = require('../models/revision');
+var Registration = require('../models/registration');
 var https = require('https');
 var fs = require('fs');
 
-//ASK JOHAN if these files will also be provided
 var path = '/Users/puifai/Downloads/WEB/group_assignment/group6/dataset/';
 var admin_active = fs.readFileSync(path + 'admin_active.txt').toString().split("\n");
 var admin_former = fs.readFileSync(path + 'admin_former.txt').toString().split("\n");
@@ -13,6 +13,35 @@ var bot = fs.readFileSync(path + 'bot.txt').toString().split("\n");
 
 var nodisplay = "display: none;";
 var showdisplay = "display: block;";
+
+module.exports.addUser = function(req, res) {
+  var parameterjson = req.body;
+  console.log(parameterjson);
+
+  Registration.userExist(parameterjson.email, function(err,result){
+    if(err){console.log("ERROR");}
+    else{
+      console.log(result);
+      if(result > 0){
+        var errormsg = "This email is already existed. Please input new email address or Login";
+        var inputemail = req.app.locals.inputemail;
+        var inputfirstname = req.app.locals.inputfirstname;
+        var inputlastname = req.app.locals.inputlastname;
+        res.render('index.ejs', {errormsg: errormsg, inputemail:inputemail, inputfirstname:inputfirstname, inputlastname:inputlastname, registrationdisplay:showdisplay, logindisplay:nodisplay});
+      }
+      else{
+        Registration.addNewUser(parameterjson, function(err,result){
+          if(err){console.log("ERROR");}
+          else{
+            console.log("Registration Info Submitted Successfully!");
+            getMain(req,res);
+          }
+        });
+      }
+    }
+  });
+};
+
 module.exports.showForm = function(req, res) {
     var errormsg = req.app.locals.errormsg;
     var inputemail = req.app.locals.inputemail;
@@ -24,16 +53,17 @@ module.exports.showForm = function(req, res) {
 //Get query results and render main page after login/registration
 module.exports.showMain = function(req, res) {
   console.log("ShowMAIN is ran");
-  var title = req.app.locals.title;
+  getMain(req, res);
+};
+
+function getMain(req, res){
+  console.log("getMain rannnn!!!!!!!");
   var allResult = {};
   var count = 0;
 
   //OVERALL Analytics
-  if(req.query.numberofarticle != null){var numberofarticle = parseInt(req.query.numberofarticle);}
-  else{var numberofarticle = 2;}
-  console.log(numberofarticle);
   //Find 2 articles with most number of revisions
-  Revision.findMostNumRev(numberofarticle, function(err, result){
+  Revision.findMostNumRev(2, function(err, result){
     if(err){console.log("ERROR");}
     else{
       allResult.mostNumRev1 = result[0]._id;
@@ -44,7 +74,7 @@ module.exports.showMain = function(req, res) {
   });
 
   //Find 2 articles with least number of revisions
-  Revision.findLeastNumRev(parseInt(numberofarticle), function(err, result){
+  Revision.findLeastNumRev(2, function(err, result){
     if(err){console.log("ERROR");}
     else{
       allResult.leastNumRev1 = result[0]._id;
@@ -134,9 +164,7 @@ module.exports.showMain = function(req, res) {
       parseAllResult(allResult, res, count, 'main.ejs');
     }
   });
-
-
-};
+}
 
 //Sending Overall Data Analytics result back to browser: Before rendering, check that all the functions have been run with count and then render to Main
 function parseAllResult(allResult, res, count, viewfile){

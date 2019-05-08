@@ -14,48 +14,79 @@ var bot = fs.readFileSync(path + 'bot.txt').toString().split("\n");
 var nodisplay = "display: none;";
 var showdisplay = "display: block;";
 
-module.exports.addUser = function(req, res) {
-  var parameterjson = req.body;
-  console.log(parameterjson);
+module.exports.loginRegister = function(req, res) {
+  console.log("loginRegister is ran!");
+  var body = req.body;
+  console.log(body);
 
-  Registration.userExist(parameterjson.email, function(err,result){
-    if(err){console.log("ERROR");}
-    else{
-      console.log(result);
-      if(result > 0){
-        var errormsg = "This email is already existed. Please input new email address or Login";
-        var inputemail = req.app.locals.inputemail;
-        var inputfirstname = req.app.locals.inputfirstname;
-        var inputlastname = req.app.locals.inputlastname;
-        res.render('index.ejs', {errormsg: errormsg, inputemail:inputemail, inputfirstname:inputfirstname, inputlastname:inputlastname, registrationdisplay:showdisplay, logindisplay:nodisplay});
-      }
+  //If login form is posted
+  if(body.formtype == "login"){
+    Registration.loginCheck(body.loginemail, body.loginpassword, function(err,result){
+      if(err){console.log("ERROR");}
       else{
-        Registration.addNewUser(parameterjson, function(err,result){
-          if(err){console.log("ERROR");}
-          else{
-            console.log("Registration Info Submitted Successfully!");
-            getMain(req,res);
-          }
-        });
+        if(result == 1){
+          console.log("Logged in successfully!");
+          getMain(req,res);
+        }
+        else{
+          var loginerrormsg = "Email or Password is invalid. Please input again.";
+          var errormsg = req.app.locals.errormsg;
+          getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
+        }
       }
-    }
-  });
-};
+    });
+  }
+
+  //If registration form is posted
+  if(body.formtype == "registration"){
+    Registration.userExist(body.email, function(err,result){
+      if(err){console.log("ERROR");}
+      else{
+        console.log(result);
+        if(result > 0){
+          var loginerrormsg = req.app.locals.loginerrormsg;
+          var errormsg = "This email is already existed. Please input new email address or Login if you have already registered";
+          getIndex(req, res, loginerrormsg, errormsg, showdisplay, nodisplay);
+          res.render('index.ejs', {allResult:allResult, registrationdisplay:showdisplay, logindisplay:nodisplay});
+        }
+        else{
+          Registration.addNewUser(body, function(err,result){
+            if(err){console.log("ERROR");}
+            else{
+              console.log("Registration Info Submitted Successfully!");
+              getMain(req,res);
+            }
+          });
+        }
+      }
+    });
+  }
+}
 
 module.exports.showForm = function(req, res) {
-    var errormsg = req.app.locals.errormsg;
-    var inputemail = req.app.locals.inputemail;
-    var inputfirstname = req.app.locals.inputfirstname;
-    var inputlastname = req.app.locals.inputlastname;
-    res.render('index.ejs', {errormsg: errormsg, inputemail:inputemail, inputfirstname:inputfirstname, inputlastname:inputlastname, registrationdisplay:nodisplay, logindisplay:showdisplay});
+  var loginerrormsg = req.app.locals.loginerrormsg;
+  var errormsg = req.app.locals.errormsg;
+  getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
 };
 
-//Get query results and render main page after login/registration
+//Render index.ejs
+function getIndex(req, res, loginerrormsg, errormsg, registrationdisplay, logindisplay){
+  var allResult = {};
+  allResult.loginerrormsg = loginerrormsg;
+  allResult.errormsg = errormsg;
+  allResult.inputemail = req.app.locals.inputemail;
+  allResult.inputfirstname = req.app.locals.inputfirstname;
+  allResult.inputlastname = req.app.locals.inputlastname;
+  res.render('index.ejs', {allResult:allResult, registrationdisplay:registrationdisplay, logindisplay:logindisplay});
+}
+
+//Get /main
 module.exports.showMain = function(req, res) {
   console.log("ShowMAIN is ran");
   getMain(req, res);
 };
 
+//Get query results and render main page
 function getMain(req, res){
   console.log("getMain rannnn!!!!!!!");
   var allResult = {};

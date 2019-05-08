@@ -11,29 +11,35 @@
 </head>
 <body>
   <div id="loginform" style="<%=logindisplay%>">
-    <label for="email">Email:</label>
-    <input type="text" id="loginemail"><br>
-    <label for="password">Password:</label>
-    <input type="text" id="loginpassword"><br>
-    <button type="button" onclick="">Login</button><br>
-    <button type="button" onclick="register()">Register</button><br><br>
+    <form method="POST" action="main">
+      <p id="loginerrorresult"><%=allResult.loginerrormsg%></p>
+      <label for="email">Email:</label>
+      <input type="email" id="loginemail" name="loginemail" class="loginrequired"><br>
+      <label for="password">Password:</label>
+      <input type="password" id="loginpassword" name="loginpassword" class="loginrequired"><br>
+      <input name="formtype" value="login" style="display:none">
+      <input type="submit">
+      <button type="button" onclick="register()">Register</button><br><br>
+    </form>
   </div>
 
 
   <div id="registrationform" style = "<%=registrationdisplay%>">
-    <form method="POST" action="main" id="mainForm">
-      <p id="errorresult"><%=errormsg%></p>
+    <form method="POST" action="main">
+      <p id="errorresult"><%=allResult.errormsg%></p>
       <label for="email">Email:</label>
-      <input type="email" id="email" name="email" class="required" value="<%=inputemail%>"><br>
+      <input type="email" id="email" name="email" class="required" value="<%=allResult.inputemail%>"><br>
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" class="required"><br>
       <label for="password">Re-Password:</label>
       <input type="password" id="repassword" name="repassword" class="required"><br>
       <label for="firstname">First name:</label>
-      <input type="text" id="firstname" name="firstname" class="required" value="<%=inputfirstname%>"><br>
+      <input type="text" id="firstname" name="firstname" class="required" value="<%=allResult.inputfirstname%>"><br>
       <label for="lastname">Last name:</label>
-      <input type="text" id="lastname" name="lastname" class="required" value="<%=inputlastname%>"><br>
+      <input type="text" id="lastname" name="lastname" class="required" value="<%=allResult.inputlastname%>"><br>
+      <input name="formtype" value="registration" style="display:none">
       <input type="submit">
+      <button type="button" onclick="login()">Back to Login</button><br>
     </form>
   </div>
 </body>

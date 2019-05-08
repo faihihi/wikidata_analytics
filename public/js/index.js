@@ -1,8 +1,15 @@
+//Hide login form and show registration form
 function register(){
-  console.log("button clicked");
   document.getElementById("registrationform").style.display = "block";
   document.getElementById("loginform").style.display = "none";
 }
+
+//Hide registration form and show login form
+function login(){
+  document.getElementById("registrationform").style.display = "none";
+  document.getElementById("loginform").style.display = "block";
+}
+
 
 //function to determine if a field is blank
 function isBlank(inputField){
@@ -15,11 +22,10 @@ function isBlank(inputField){
 }
 
 //Validate Email
-function validateEmail(){
-  var email = document.getElementById("email");
+function validateEmail(email){
+  var email = document.getElementById(email);
   var emailregex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   if(email.value.match(emailregex)){
-    //console.log("matched!");
     return true;
   }
   else{
@@ -32,11 +38,9 @@ function validatePassword(){
   var password = document.getElementById("password");
   var pwregex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
   if(password.value.match(pwregex)){
-    console.log("password strong");
     return true;
   }
   else{
-    console.log("password not strong enough");
     return false;
   }
 }
@@ -73,7 +77,7 @@ function checkName(){
 }
 
 function runValidation(){
-  if(!validateEmail()){
+  if(!validateEmail("email")){
     errorresult.innerHTML = "Invalid email. Please input email in the correct format.";
     return false;
   }
@@ -95,8 +99,29 @@ function runValidation(){
 }
 
 $(document).ready(function(){
+  var loginform = document.getElementById("loginform");
+  var loginRequiredInputs = document.querySelectorAll(".loginrequired");
   var registrationform = document.getElementById("registrationform");
   var requiredInputs = document.querySelectorAll(".required");
+
+  loginform.onsubmit = function(e){
+    console.log("Login submitted on frontend");
+    for (var i=0; i < loginRequiredInputs.length; i++){
+      if(isBlank(loginRequiredInputs[i])){
+        e.preventDefault();
+        loginerrorresult.innerHTML = "Please input all the required fields";
+      }
+      else if(!validateEmail("loginemail")){
+        e.preventDefault();
+        loginerrorresult.innerHTML = "Invalid email. Please input email in the correct format.";
+        return false;
+      }
+	    else{
+        console.log("pass!");
+	    }
+    }
+
+  }
 
   registrationform.onsubmit = function(e){
     //var requiredInputs = document.querySelectorAll(".required");
@@ -107,6 +132,7 @@ $(document).ready(function(){
       }
       //if not pass validation
       else if(!runValidation()){
+        console.log("run validation problem");
         e.preventDefault();
       }
 	    else{

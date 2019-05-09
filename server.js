@@ -12,10 +12,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//The session will expire in 60 sec (60,000 miliseconds)
+//The session will expire in 10 minutes (600,000 miliseconds)
 app.use(session({
   secret: 'ssshhhh',
-  cookie: {maxAge: 60000},
+  cookie: {maxAge: 600000},
   resave: true,
   saveUninitialized: true
 }));

@@ -18,6 +18,8 @@ module.exports.loginRegister = function(req, res) {
   console.log("loginRegister is ran!");
   var body = req.body;
   console.log(body);
+  sess = req.session;
+  console.log(sess);
 
   //If login form is posted
   if(body.formtype == "login"){
@@ -26,6 +28,7 @@ module.exports.loginRegister = function(req, res) {
       else{
         if(result == 1){
           console.log("Logged in successfully!");
+          sess.login = body.loginemail;
           getMain(req,res);
         }
         else{
@@ -54,6 +57,7 @@ module.exports.loginRegister = function(req, res) {
             if(err){console.log("ERROR");}
             else{
               console.log("Registration Info Submitted Successfully!");
+              sess.login = body.email;
               getMain(req,res);
             }
           });
@@ -64,9 +68,19 @@ module.exports.loginRegister = function(req, res) {
 }
 
 module.exports.showForm = function(req, res) {
-  var loginerrormsg = req.app.locals.loginerrormsg;
-  var errormsg = req.app.locals.errormsg;
-  getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
+  sess = req.session;
+  console.log(sess);
+  //If login session is still valid, enter main page
+  if(sess && "login" in sess){
+    console.log("user is still in session");
+    getMain(req, res);
+  }
+  else{
+    console.log("user not in session");
+    var loginerrormsg = req.app.locals.loginerrormsg;
+    var errormsg = req.app.locals.errormsg;
+    getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
+  }
 };
 
 //Render index.ejs
@@ -83,7 +97,14 @@ function getIndex(req, res, loginerrormsg, errormsg, registrationdisplay, logind
 //Get /main
 module.exports.showMain = function(req, res) {
   console.log("ShowMAIN is ran");
-  getMain(req, res);
+  sess = req.session;
+  console.log(sess);
+  if(sess && "login" in sess){
+    getMain(req, res);
+  }
+  else{
+    console.log("Not in session");
+  }
 };
 
 //Get query results and render main page

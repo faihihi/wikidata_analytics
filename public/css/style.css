@@ -1,11 +1,80 @@
 1, h2, h3, nav, footer {
- font-family: Georgia, Cambria, "Times New Roman", serif;
-}
-body {
-   font-family: "Lucida Sans", Verdana, Arial, sans-serif;
-   font-size: 80%;
+  font-family: Georgia, Cambria, "Times New Roman", serif;
 }
 
-.google-visualization-tooltip{
-  display:table;
+body {
+  font-family: "Lucida Sans", Verdana, Arial, sans-serif;
+  font-size: 80%;
+  background-color: #bf5f5f;
+}
+
+.google-visualization-tooltip {
+  display: table;
+}
+
+.form {
+  height: 250px;
+  width: 300px;
+  margin: auto;
+  margin-top: 50px;
+  padding: 50px 30px;
+  background-color: #f7f7f7;
+}
+
+.registrationform{
+  height: 380px;
+}
+
+.form form {
+  padding: 0 30px;
+}
+
+.form input {
+  padding: 7px;
+  padding-left: 15px;
+  margin: 7px;
+  width: 87%;
+  height: 25px;
+  border: none;
+}
+
+input:focus {
+  outline-width: 0;
+}
+
+.form .submit-btn {
+  width: 96%;
+  background-color: #bf5f5f;
+  color: white;
+  height: 35px;
+  border: none;
+}
+
+.form .submit-btn:hover {
+  background-color: #515151;
+  cursor: pointer;
+}
+
+.form #registerlink, .form #loginlink {
+  background-color: transparent;
+  border: none;
+  color: #bf5f5f;
+  font-size: 11px;
+  font-weight: 400;
+  margin-left: 8px;
+  margin-top: 8px;
+}
+
+.form #loginlink {
+  margin-left: 0;
+}
+
+.form #registerlink:hover, .form #loginlink:hover {
+  color: black;
+  cursor: pointer;
+}
+
+#loginerrorresult, #errorresult{
+  color: red;
+    margin-left: 8px;
 }

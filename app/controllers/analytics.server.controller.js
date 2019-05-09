@@ -14,6 +14,14 @@ var bot = fs.readFileSync(path + 'bot.txt').toString().split("\n");
 var nodisplay = "display: none;";
 var showdisplay = "display: block;";
 
+module.exports.logout = function(req, res) {
+  console.log("logout function ran!");
+  req.session.destroy();
+  var loginerrormsg = "You have logged out from the system.";
+  var errormsg = req.app.locals.errormsg;
+  getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
+}
+
 module.exports.loginRegister = function(req, res) {
   console.log("loginRegister is ran!");
   var body = req.body;
@@ -50,7 +58,6 @@ module.exports.loginRegister = function(req, res) {
           var loginerrormsg = req.app.locals.loginerrormsg;
           var errormsg = "This email is already existed. Please input new email address or Login if you have already registered";
           getIndex(req, res, loginerrormsg, errormsg, showdisplay, nodisplay);
-          res.render('index.ejs', {allResult:allResult, registrationdisplay:showdisplay, logindisplay:nodisplay});
         }
         else{
           Registration.addNewUser(body, function(err,result){
@@ -85,6 +92,7 @@ module.exports.showForm = function(req, res) {
 
 //Render index.ejs
 function getIndex(req, res, loginerrormsg, errormsg, registrationdisplay, logindisplay){
+  console.log("get index ran!");
   var allResult = {};
   allResult.loginerrormsg = loginerrormsg;
   allResult.errormsg = errormsg;
@@ -112,6 +120,9 @@ function getMain(req, res){
   console.log("getMain rannnn!!!!!!!");
   var allResult = {};
   var count = 0;
+
+  sess = req.session;
+  allResult.email = sess.login;
 
   //OVERALL Analytics
   //Find 2 articles with most number of revisions
@@ -222,7 +233,11 @@ function getMain(req, res){
 function parseAllResult(allResult, res, count, viewfile){
   console.log(count);
   if(count < 10){return;}
-  else{res.render(viewfile, {allResult: allResult});}
+  else{
+    allResult.individualdisplay = nodisplay;
+    allResult.authordisplay = nodisplay;
+    res.render(viewfile, {allResult: allResult});
+  }
 }
 
 //Get top # articles with highest/lowest revisions and render to highLowRevResult.ejs to be put in main.ejs section

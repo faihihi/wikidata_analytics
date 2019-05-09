@@ -20,8 +20,6 @@ $(document).ready(function(){
       console.log(article);
       var encodedArticle = encodeURIComponent(article);
       $.get("/main/article?title=" + encodedArticle, function(result) {
-        //drawArticleBarChart();
-        //drawArticlePieChart();
         //console.log(result);
         $('#individualTitle').html(result)
       });
@@ -35,6 +33,35 @@ $(document).ready(function(){
       $.get("/main/author?user=" + encodedAuthor, function(result) {
         //console.log(result);
         $('#authorAnalyticsResult').html(result)
+      });
+    });
+
+    //Display Overall section
+    $('#overallMenu').on('click', function(e){
+      $('#overallSection').css("display", "block");
+      $('#individualSection').css("display", "none");
+      $('#authorSection').css("display", "none");
+    });
+
+    //Display Individual section
+    $('#individualMenu').on('click', function(e){
+      $('#overallSection').css("display", "none");
+      $('#individualSection').css("display", "block");
+      $('#authorSection').css("display", "none");
+    });
+
+    //Display Author section
+    $('#authorMenu').on('click', function(e){
+      $('#overallSection').css("display", "none");
+      $('#individualSection').css("display", "none");
+      $('#authorSection').css("display", "block");
+    });
+
+    //When user logout
+    $('#logout').on('click', function(e){
+      console.log("Log out");
+      $.get("/logout", function(result) {
+        $("html").html(result);
       });
     });
 });

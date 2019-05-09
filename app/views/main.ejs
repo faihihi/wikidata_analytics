@@ -5,64 +5,86 @@
   <meta charset="utf-8">
   <title>COMP5347 Group Project</title>
   <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/solid.css" integrity="sha384-ioUrHig76ITq4aEJ67dHzTvqjsAP/7IzgwE7lgJcg2r7BRNGYSK0LwSmROzYtgzs" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/fontawesome.css" integrity="sha384-sri+NftO+0hcisDKgr287Y/1LVnInHJ1l+XC7+FOabmTTIK0HnE2ID+xxvJ21c5J" crossorigin="anonymous">
+
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript" src="/js/main.js"></script>
 
 </head>
 
-<body>
+<body id="main">
   <script type="text/javascript">
     var overallBarChart = <%- JSON.stringify(allResult.overallBarChart) %>;
     var overallPieChart = <%- JSON.stringify(allResult.overallPieChart) %>;
     var overallRevAdminType = <%- JSON.stringify(allResult.overallRevAdminType) %>;
   </script>
 
-  <div id="overallSection">
-    <h2>Overall Analytics</h2>
-    <label>Number of Article:</label>
-    <input id="number" type="text" name="title">
-    <input id="numOfArticleSubmit" type="submit" value="Search">
-    <div id="numHighLowResult">
-      <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
-      <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
+  <div class="container">
+    <div id="contentLeft">
+      <ul id="leftNavigation">
+        <li id="welcomeSec">Welcome, <%= allResult.email%>!!<br><i class="fas fa-smile-beam fa-3x"></i></li>
+        <li id="overallMenu"> <a href="#"><i class="fas fa-chart-bar leftNavIcon"></i> Overall Analytics </a></li>
+        <li id="individualMenu"> <a href="#"><i class="fas fa-newspaper leftNavIcon"></i> Individual Analytics </a></li>
+        <li id="authorMenu"> <a href="#"><i class="fas fa-user-edit leftNavIcon"></i> Author Analytics </a></li>
+        <li id="logout"> <a href="#"><span style="margin-left: 40px;"> LOGOUT </span></a></li>
+      </ul>
     </div>
-    <p>The article edited by largest group of registered users : <%= allResult.largestRegUserRev%></p>
-    <p>The article edited by smallest group of registered users : <%= allResult.smallestRegUserRev%></p>
-    <p>The top 2 articles with the longest history (measured by age) : <%= allResult.longestHistory1%>, <%= allResult.longestHistory2%></p>
-    <p>Article with the shortest history (measured by age) : <%= allResult.youngestHistory%></p>
 
-    <div id="overallBarChartSec"></div>
-    <div id="overallPieChartSec"></div>
+    <div id="contentRight">
+      <div id="overallSection">
+        <h2>Overall Analytics</h2>
+        <label>Number of Article:</label>
+        <input id="number" type="text" name="title">
+        <input id="numOfArticleSubmit" type="submit" value="Search">
+        <div id="numHighLowResult">
+          <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
+          <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
+        </div>
+        <p>The article edited by largest group of registered users : <%= allResult.largestRegUserRev%></p>
+        <p>The article edited by smallest group of registered users : <%= allResult.smallestRegUserRev%></p>
+        <p>The top 2 articles with the longest history (measured by age) : <%= allResult.longestHistory1%>, <%= allResult.longestHistory2%></p>
+        <p>Article with the shortest history (measured by age) : <%= allResult.youngestHistory%></p>
+
+        <div id="overallBarChartSec"></div>
+        <div id="overallPieChartSec"></div>
+      </div>
+
+      <div id="individualSection" style="<%=allResult.individualdisplay%>">
+        <h2>Individual Article Analytics</h2>
+        <select id="selectArticle" name="article">
+          <option>Choose an Article</option>
+          <% for(var i = 0; i < allResult.articleDropDownList.length;i++){ %>
+          <option value="<%=allResult.articleDropDownList[i]%>"><%=allResult.articleDropDownList[i]%></option>
+          <% } %>
+        </select>
+        <input id="selectArticleSubmit" type="submit" value="Select">
+        <div id="individualTitle">
+          <input id="selectUserYrSubmit" type="submit" value="Submit" style="display:none;">
+          <p id="errormsg" style="display:none;"></p>
+        </div>
+        <div id="individualTitleTop5BarChart"></div>
+      </div>
+
+
+      <div id="authorSection" style="<%=allResult.authordisplay%>">
+        <h2>Author Analytics</h2>
+        <label>Input author's name:</label>
+        <input id="selectAuthor" type="text">
+        <input id="selectAuthorSubmit" type="submit" value="Submit">
+
+        <div id="authorAnalyticsResult">
+          <input id="selectAuthorArticleSubmit" type="submit" value="Submit" style="display:none;">
+        </div>
+      </div>
+
+
+    </div>
+
   </div>
 
-  <div id="individualSection">
-    <h2>Individual Article Analytics</h2>
-    <select id="selectArticle" name="article">
-      <option>Choose an Article</option>
-      <% for(var i = 0; i < allResult.articleDropDownList.length;i++){ %>
-      <option value="<%=allResult.articleDropDownList[i]%>"><%=allResult.articleDropDownList[i]%></option>
-      <% } %>
-    </select>
-    <input id="selectArticleSubmit" type="submit" value="Select">
-    <div id="individualTitle">
-      <input id="selectUserYrSubmit" type="submit" value="Submit" style="display:none;">
-      <p id="errormsg" style="display:none;"></p>
-    </div>
-    <div id="individualTitleTop5BarChart"></div>
-  </div>
 
-
-  <div id="authorSection">
-    <h2>Author Analytics</h2>
-    <label>Input author's name:</label>
-    <input id="selectAuthor" type="text">
-    <input id="selectAuthorSubmit" type="submit" value="Submit">
-
-    <div id="authorAnalyticsResult">
-      <input id="selectAuthorArticleSubmit" type="submit" value="Submit" style="display:none;">
-    </div>
-  </div>
 
 </body>
 

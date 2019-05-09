@@ -12,5 +12,6 @@ router.get('/main/article', controller.showIndividualResult);
 router.get('/main/article/getBar', controller.getIndividualBarChartTop5);
 router.get('/main/author', controller.showAuthorResult);
 router.get('/main/author/showTimestamp', controller.showTimestampResult);
+router.get('/logout', controller.logout);
 
 module.exports = router;

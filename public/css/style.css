@@ -1,17 +1,30 @@
-1, h2, h3, nav, footer {
-  font-family: Georgia, Cambria, "Times New Roman", serif;
+h1, h2, h3, nav, footer {
+  font-family: "Open sans", Sans-serif;
 }
 
 body {
   font-family: "Lucida Sans", Verdana, Arial, sans-serif;
   font-size: 80%;
+}
+
+#main{
+  background-color: white;
+}
+
+#index{
   background-color: #bf5f5f;
 }
+
+a {
+ text-decoration: none;
+}
+
 
 .google-visualization-tooltip {
   display: table;
 }
 
+/* index.ejs */
 .form {
   height: 250px;
   width: 300px;
@@ -77,4 +90,105 @@ input:focus {
 #loginerrorresult, #errorresult{
   color: red;
     margin-left: 8px;
+}
+
+/* main.ejs */
+.container {
+  background-color: white;
+  margin: auto 0;
+  padding: 20px 20px;
+  background-size: cover;
+}
+
+#contentLeft {
+ z-index: 10;
+ width: 250px;
+ height: 100%;
+ position: fixed;
+ top: 0;
+ left: 0;
+ background-color: #bf5f5f;
+ border-right: solid 1px white;
+}
+
+#contentRight {
+ padding: 1.3rem 2rem;
+ margin-left: 250px;
+}
+
+#leftNavigation {
+ margin: 0;
+}
+
+#leftNavigation, #leftNavigation li ul {
+ list-style: none;
+ padding: 0;
+}
+
+#leftNavigation li a {
+ font-size: 0.875rem;
+ display: block;
+ padding: 0.8rem 1rem 0.8rem 3rem;
+ color: white;
+ border-bottom: solid 1px #e0b1b1;
+ text-overflow: ellipsis;
+ overflow: hidden;
+ position: relative;
+ -webkit-transition: color 0.2s ease;
+ transition: color 0.2s ease
+}
+
+#logout li a{
+  border: none;
+}
+
+#leftNavigation li a,
+#leftNavigation li a .leftNavIcon {
+ line-height: 300%;
+}
+
+#leftNavigation li a .leftNavIcon {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: 3rem;
+ padding: 0.8rem 0;
+ text-align: center
+}
+
+#leftNavigation li a:hover {
+ background-color: #515151;
+ border-bottom: #515151;
+}
+
+#leftNavigation li ul {
+ display: none;
+ margin: 0;
+ background-color: #17232f;
+}
+
+#leftNavigation li ul li a {
+ border-bottom: solid 1px #233547;
+}
+
+#leftNavigation li ul li:last-child a {
+ border-bottom: none;
+}
+
+#leftNavigation>li:last-child {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #914747;
+    border: none;
+  }
+
+#welcomeSec{
+  background-color: #914747;
+  color: white;
+  height: 90px;
+    text-align: center;
+    padding: 25px;
+    line-height: 300%;
+    font-size: 14px;
 }

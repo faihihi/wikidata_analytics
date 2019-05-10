@@ -7,11 +7,19 @@ $(document).ready(function(){
     //When submitted number of article, respond with number of least/most revisions for overall data
     $('#numOfArticleSubmit').on('click', function(e){
       var getnumber = $('#number').val();
-      console.log(getnumber);
-      var parameters = {numberofarticle: $('#number').val() };
-      $.get('/main/getHighLowRev', parameters, function(result) {
+      console.log(parseInt(getnumber));
+      if(isNaN(parseInt(getnumber))){
+        console.log("is not number");
+        $('#numbererror').html("Invalid input. Please input number.")
+        e.preventDefault();
+      }
+      else{
+        var parameters = {numberofarticle: $('#number').val() };
+        $.get('/main/getHighLowRev', parameters, function(result) {
+          $('#numbererror').html("");
           $('#numHighLowResult').html(result);
-      });
+        });
+      }
     });
 
     //When submitted article title, respond with that article's data analytics
@@ -21,7 +29,7 @@ $(document).ready(function(){
       var encodedArticle = encodeURIComponent(article);
       $.get("/main/article?title=" + encodedArticle, function(result) {
         //console.log(result);
-        $('#individualTitle').html(result)
+        $('#individualTitle').html(result);
       });
     });
 
@@ -32,7 +40,8 @@ $(document).ready(function(){
       console.log(author);
       $.get("/main/author?user=" + encodedAuthor, function(result) {
         //console.log(result);
-        $('#authorAnalyticsResult').html(result)
+        $('#authorerror').html("");
+        $('#authorAnalyticsResult').html(result);
       });
     });
 
@@ -55,6 +64,18 @@ $(document).ready(function(){
       $('#overallSection').css("display", "none");
       $('#individualSection').css("display", "none");
       $('#authorSection').css("display", "block");
+    });
+
+    //Display overall bar chart
+    $('#slide-item-1').on('click', function(e){
+      $('#overallBarChartSec').css("display", "block");
+      $('#overallPieChartSec').css("display", "none");
+    });
+
+    //Display overall pie chart
+    $('#slide-item-2').on('click', function(e){
+      $('#overallBarChartSec').css("display", "none");
+      $('#overallPieChartSec').css("display", "block");
     });
 
     //When user logout
@@ -90,8 +111,9 @@ function drawOverallBarChart(){
   var data = google.visualization.arrayToDataTable(bar);
   var options = {
       'title':"Revision number distribution by year and by user type across the whole dataset",
-      'width':850,
-      'height':450
+      'width':1100,
+      'height':500,
+      colors: ['#bf5f5f', '#ffafaf', '#ff9b41', '#bb245f']
   };
   var chart = new google.visualization.ColumnChart($("#overallBarChartSec")[0]);
   chart.draw(data, options);
@@ -121,8 +143,9 @@ function drawOverallPieChart(){
   var data = google.visualization.arrayToDataTable(usertype);
   var options = {
       'title':"Revision number distribution by user type across the whole data set",
-      'width':850,
-      'height':450,
+      'width':900,
+      'height':550,
+      colors: ['#bf5f5f', '#ee9c9c', '#f2bc8b', '#de7e34'],
       tooltip: { isHtml: true }
   };
   var chart = new google.visualization.PieChart($("#overallPieChartSec")[0]);
@@ -143,5 +166,9 @@ function drawOverallPieChart(){
     $(".google-visualization-tooltip-item-list li:eq(1)").html(tooltip[sliceid]).css("font-family", "Arial");
   }
   google.visualization.events.addListener(chart, 'onmouseover', eventHandler);
+  var container = document.getElementById('overallPieChartSec');
+  google.visualization.events.addListener(chart, 'ready', function () {
+    container.style.display = 'none';
+  });
   chart.draw(data, options);
 }

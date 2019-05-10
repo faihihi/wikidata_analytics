@@ -3,6 +3,27 @@ google.charts.setOnLoadCallback(drawArticleBarChart);
 google.charts.setOnLoadCallback(drawArticlePieChart);
 
 $(document).ready(function(){
+  //Display individual bar chart #1
+  $('#slide-item-3').on('click', function(e){
+    $('#articleBarChartSec').css("display", "block");
+    $('#articlePieChartSec').css("display", "none");
+    $('#articleBarChartSec2').css("display", "none");
+  });
+
+  //Display individual pie chart
+  $('#slide-item-4').on('click', function(e){
+    $('#articleBarChartSec').css("display", "none");
+    $('#articlePieChartSec').css("display", "block");
+    $('#articleBarChartSec2').css("display", "none");
+  });
+
+  //Display individual bar chart 2
+  $('#slide-item-5').on('click', function(e){
+    $('#articleBarChartSec').css("display", "none");
+    $('#articlePieChartSec').css("display", "none");
+    $('#articleBarChartSec2').css("display", "block");
+  });
+
     //When submitted user lists and year range of the article, respond with bar chart
     $('#selectUserYrSubmit').on('click', function(e){
       var article = $('#selectArticle').val();
@@ -11,12 +32,12 @@ $(document).ready(function(){
       var to = $('#selectMaxYear').val();
       if(from >= to){
         console.log("invalid range");
-        $('#errormsg').html("Invalid year range. Please select the year range again.")
+        $('#topusererror').html("Invalid year range. Please select the year range again.")
         e.preventDefault();
       }
-      else if(topusers == null || from == null || to == null){
+      else if(topusers == null || from == "From" || to == "To"){
         console.log("not all selected");
-        $('#errormsg').html("Some fields are not selected. Please select all fields.")
+        $('#topusererror').html("Some fields are not selected. Please select all fields.")
         e.preventDefault();
       }
       else{
@@ -27,6 +48,7 @@ $(document).ready(function(){
         //console.log(typeof(user));
         $.get(route, function(result) {
           //console.log(result);
+          $('#topusererror').html("");
           $('#individualTitleTop5BarChart').html(result)
         });
       }
@@ -59,8 +81,9 @@ function drawArticleBarChart(){
     var data = google.visualization.arrayToDataTable(bar);
     var options = {
         'title':"Revision number distributed by year and by user type of the article: " + $('#selectArticle').val(),
-        'width':850,
-        'height':450
+        'width':1100,
+        'height':500,
+        colors: ['#bf5f5f', '#ffafaf', '#ff9b41', '#bb245f']
     };
     var chart = new google.visualization.ColumnChart($("#articleBarChartSec")[0]);
     chart.draw(data, options);
@@ -87,8 +110,9 @@ function drawArticlePieChart(){
     var data = google.visualization.arrayToDataTable(usertype);
     var options = {
         'title':"Revision number distribution by user type of the article: " + $('#selectArticle').val(),
-        'width':850,
-        'height':450,
+        'width':900,
+        'height':550,
+        colors: ['#bf5f5f', '#ee9c9c', '#f2bc8b', '#de7e34'],
         tooltip: { isHtml: true }
     };
     var chart = new google.visualization.PieChart($("#articlePieChartSec")[0]);
@@ -107,6 +131,10 @@ function drawArticlePieChart(){
       $(".google-visualization-tooltip-item-list li:eq(1)").html(tooltip[sliceid]).css("font-family", "Arial");
     }
     google.visualization.events.addListener(chart, 'onmouseover', eventHandler);
+    var container = document.getElementById('articlePieChartSec');
+    google.visualization.events.addListener(chart, 'ready', function () {
+      container.style.display = 'none';
+    });
     chart.draw(data, options);
   }
 }

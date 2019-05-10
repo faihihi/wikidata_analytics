@@ -3,8 +3,6 @@ var controller = require('../controllers/analytics.server.controller')
 var router = express.Router();
 
 router.get('/', controller.showForm);
-
-//change back to this later
 router.post('/main', controller.loginRegister);
 router.get('/main', controller.showMain);
 router.get('/main/getHighLowRev', controller.getHighLowRev);

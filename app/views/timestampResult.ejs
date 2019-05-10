@@ -6,9 +6,23 @@
    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-  <% if (locals.allResult.timestampResult) {for(var i=0; i < allResult.timestampResult.length; i++) { %>
-      <p><%= allResult.timestampResult[i].timestamp %></p>
-  <% }} %>
+  <table id="timestamp-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Timestamps</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (locals.allResult.timestampResult) {for(var i=0; i < allResult.timestampResult.length; i++) { %>
+        <tr>
+          <td><%= i %></td>
+          <td><%= allResult.timestampResult[i].timestamp %></td>
+        </tr>
+      <% }} %>
+    </tbody>
+
+  </table>
 
 </body>
 </html>

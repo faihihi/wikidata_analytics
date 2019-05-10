@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
 var fs = require('fs');
 var express = require('express');
+var pathModule = require('path');
 
-var path = '/Users/puifai/Downloads/WEB/group_assignment/group6/dataset/';
+var path = pathModule.join(process.cwd(),'dataset/');
 var admin_active = fs.readFileSync(path + 'admin_active.txt').toString().split("\n");
 var admin_former = fs.readFileSync(path + 'admin_former.txt').toString().split("\n");
 var admin_inactive = fs.readFileSync(path + 'admin_inactive.txt').toString().split("\n");
@@ -12,8 +13,8 @@ var allAdmin = admin_active.concat(admin_former, admin_inactive, admin_semi_acti
 var allRegisteredUser = allAdmin.concat(bot);
 //console.log(allRegisteredUser);
 
-mongoose.connect('mongodb://localhost/testwiki',function () {
-	  console.log('mongodb connected to testwiki!')
+mongoose.connect('mongodb://localhost/wikidata',function () {
+	  console.log('mongodb connected to wikidata!')
 	});
 
   var RevisionSchema = new mongoose.Schema({

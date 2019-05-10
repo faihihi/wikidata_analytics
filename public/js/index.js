@@ -76,6 +76,7 @@ function checkName(){
   }
 }
 
+//Check all validations
 function runValidation(){
   if(!validateEmail("email")){
     errorresult.innerHTML = "Invalid email. Please input email in the correct format.";
@@ -104,6 +105,7 @@ $(document).ready(function(){
   var registrationform = document.getElementById("registrationform");
   var requiredInputs = document.querySelectorAll(".required");
 
+  //When login form is submitted
   loginform.onsubmit = function(e){
     console.log("Login submitted on frontend");
     for (var i=0; i < loginRequiredInputs.length; i++){
@@ -117,12 +119,15 @@ $(document).ready(function(){
         return false;
       }
 	    else{
+        loginerrorresult.innerHTML = "";
+        //loginerrorresult.style.color = "#4e9947";
         console.log("pass!");
 	    }
     }
 
   }
 
+  //When registration form is submitted
   registrationform.onsubmit = function(e){
     //var requiredInputs = document.querySelectorAll(".required");
     for (var i=0; i < requiredInputs.length; i++){
@@ -132,10 +137,11 @@ $(document).ready(function(){
       }
       //if not pass validation
       else if(!runValidation()){
-        console.log("run validation problem");
         e.preventDefault();
       }
 	    else{
+        errorresult.innerHTML = "";
+        //errorresult.style.color = "#4e9947";
         console.log("pass!");
 	    }
     }

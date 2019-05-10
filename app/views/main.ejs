@@ -24,7 +24,7 @@
   <div class="container">
     <div id="contentLeft">
       <ul id="leftNavigation">
-        <li id="welcomeSec">Welcome, <%= allResult.email%>!!<br><i class="fas fa-smile-beam fa-3x"></i></li>
+        <li id="welcomeSec">Welcome,<br> <%= allResult.email%><br><i class="fas fa-smile fa-3x smileicon"></i></li>
         <li id="overallMenu"> <a href="#"><i class="fas fa-chart-bar leftNavIcon"></i> Overall Analytics </a></li>
         <li id="individualMenu"> <a href="#"><i class="fas fa-newspaper leftNavIcon"></i> Individual Analytics </a></li>
         <li id="authorMenu"> <a href="#"><i class="fas fa-user-edit leftNavIcon"></i> Author Analytics </a></li>
@@ -35,31 +35,71 @@
     <div id="contentRight">
       <div id="overallSection">
         <h2>Overall Analytics</h2>
-        <label>Number of Article:</label>
-        <input id="number" type="text" name="title">
-        <input id="numOfArticleSubmit" type="submit" value="Search">
-        <div id="numHighLowResult">
-          <p>Titles of 2 articles with highest number of revisions :<%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></p>
-          <p>Titles of 2 articles with lowest number of revisions : <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></p>
-        </div>
-        <p>The article edited by largest group of registered users : <%= allResult.largestRegUserRev%></p>
-        <p>The article edited by smallest group of registered users : <%= allResult.smallestRegUserRev%></p>
-        <p>The top 2 articles with the longest history (measured by age) : <%= allResult.longestHistory1%>, <%= allResult.longestHistory2%></p>
-        <p>Article with the shortest history (measured by age) : <%= allResult.youngestHistory%></p>
+        <div id="numbererror"></div>
+        <div class="subSection">
+          <div class="wrap">
+            <div class="search">
+              <input class="searchTerm" id="number" type="text" name="title" placeholder="Number of Article">
+              <button class="searchButton" id="numOfArticleSubmit" type="submit">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
 
-        <div id="overallBarChartSec"></div>
-        <div id="overallPieChartSec"></div>
+          <div id="numHighLowResult">
+            <p>Titles of 2 articles with highest number of revisions :<div class="result">&#8594; <%= allResult.mostNumRev1%>, <%= allResult.mostNumRev2%></div></p>
+            <p>Titles of 2 articles with lowest number of revisions : <div class="result">&#8594; <%= allResult.leastNumRev1%>, <%= allResult.leastNumRev2%></div></p>
+          </div>
+        </div>
+
+        <div class="subSection">
+          <p>The article edited by largest group of registered users : <div class="result">&#8594; <%= allResult.largestRegUserRev%></div></p>
+          <p>The article edited by smallest group of registered users : <div class="result">&#8594; <%= allResult.smallestRegUserRev%></div></p>
+        </div>
+
+        <div class="subSection">
+          <p>The top 2 articles with the longest history (measured by age) : <div class="result">&#8594; <%= allResult.longestHistory1%>, <%= allResult.longestHistory2%></div></p>
+          <p>Article with the shortest history (measured by age) : <div class="result">&#8594; <%= allResult.youngestHistory%></div></p>
+        </div>
+
+        <div class="subSection">
+          <div class="slidemenu">
+            <!-- Item 1 -->
+            <input type="radio" name="slideItem" id="slide-item-1" class="slide-toggle" checked />
+            <label for="slide-item-1">
+              <i class="fas fa-chart-bar fa-2x graphicon"></i><span>Bar Chart</span>
+            </label>
+            <!-- Item 2 -->
+            <input type="radio" name="slideItem" id="slide-item-2" class="slide-toggle" />
+            <label for="slide-item-2">
+              <i class="fas fa-chart-pie fa-2x graphicon"></i><span>Pie Chart</span>
+            </label>
+            <div class="clear"></div>
+            <!-- Bar -->
+            <div class="slider">
+              <div class="bar"></div>
+            </div>
+          </div>
+          <div class="graphwrapper">
+            <div id="overallBarChartSec"></div>
+            <div id="overallPieChartSec"></div>
+          </div>
+        </div>
       </div>
 
       <div id="individualSection" style="<%=allResult.individualdisplay%>">
         <h2>Individual Article Analytics</h2>
-        <select id="selectArticle" name="article">
-          <option>Choose an Article</option>
-          <% for(var i = 0; i < allResult.articleDropDownList.length;i++){ %>
-          <option value="<%=allResult.articleDropDownList[i]%>"><%=allResult.articleDropDownList[i]%></option>
-          <% } %>
-        </select>
-        <input id="selectArticleSubmit" type="submit" value="Select">
+        <div class="select-style">
+          <select id="selectArticle" name="article">
+            <option>Choose an Article</option>
+            <% for(var i = 0; i < allResult.articleDropDownList.length;i++){ %>
+            <option value="<%=allResult.articleDropDownList[i]%>"><%=allResult.articleDropDownList[i]%></option>
+            <% } %>
+          </select>
+          <i class="fa fa-caret-down graphicon" aria-hidden="true"></i>
+        </div>
+        <input class="select-btn" id="selectArticleSubmit" type="submit" value="Select">
+
         <div id="individualTitle">
           <input id="selectUserYrSubmit" type="submit" value="Submit" style="display:none;">
           <p id="errormsg" style="display:none;"></p>
@@ -70,22 +110,22 @@
 
       <div id="authorSection" style="<%=allResult.authordisplay%>">
         <h2>Author Analytics</h2>
-        <label>Input author's name:</label>
-        <input id="selectAuthor" type="text">
-        <input id="selectAuthorSubmit" type="submit" value="Submit">
+        <div class="wrap">
+          <div class="search">
+            <input class="searchTerm" id="selectAuthor" type="text" placeholder="Author's name">
+            <button class="searchButton" id="selectAuthorSubmit" type="submit" value="Submit">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
 
         <div id="authorAnalyticsResult">
           <input id="selectAuthorArticleSubmit" type="submit" value="Submit" style="display:none;">
         </div>
       </div>
-
-
     </div>
-
   </div>
 
 
-
 </body>
-
 </html>

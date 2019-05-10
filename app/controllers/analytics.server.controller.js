@@ -3,8 +3,9 @@ var Revision = require('../models/revision');
 var Registration = require('../models/registration');
 var https = require('https');
 var fs = require('fs');
+var pathModule = require('path');
 
-var path = '/Users/puifai/Downloads/WEB/group_assignment/group6/dataset/';
+var path = pathModule.join(process.cwd(),'app/import/dataset/');
 var admin_active = fs.readFileSync(path + 'admin_active.txt').toString().split("\n");
 var admin_former = fs.readFileSync(path + 'admin_former.txt').toString().split("\n");
 var admin_inactive = fs.readFileSync(path + 'admin_inactive.txt').toString().split("\n");
@@ -14,6 +15,7 @@ var bot = fs.readFileSync(path + 'bot.txt').toString().split("\n");
 var nodisplay = "display: none;";
 var showdisplay = "display: block;";
 
+//When logout
 module.exports.logout = function(req, res) {
   console.log("logout function ran!");
   req.session.destroy();
@@ -22,17 +24,17 @@ module.exports.logout = function(req, res) {
   getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
 }
 
+//When login or register forms are submitted
 module.exports.loginRegister = function(req, res) {
   console.log("loginRegister is ran!");
   var body = req.body;
-  console.log(body);
   sess = req.session;
   console.log(sess);
 
   //If login form is posted
   if(body.formtype == "login"){
     Registration.loginCheck(body.loginemail, body.loginpassword, function(err,result){
-      if(err){console.log("ERROR");}
+      if(err){console.log(err);}
       else{
         if(result == 1){
           console.log("Logged in successfully!");
@@ -51,7 +53,7 @@ module.exports.loginRegister = function(req, res) {
   //If registration form is posted
   if(body.formtype == "registration"){
     Registration.userExist(body.email, function(err,result){
-      if(err){console.log("ERROR");}
+      if(err){console.log(err);}
       else{
         console.log(result);
         if(result > 0){
@@ -61,7 +63,7 @@ module.exports.loginRegister = function(req, res) {
         }
         else{
           Registration.addNewUser(body, function(err,result){
-            if(err){console.log("ERROR");}
+            if(err){console.log(err);}
             else{
               console.log("Registration Info Submitted Successfully!");
               sess.login = body.email;
@@ -74,6 +76,7 @@ module.exports.loginRegister = function(req, res) {
   }
 }
 
+//When GET '/', check if user is in session and render page
 module.exports.showForm = function(req, res) {
   sess = req.session;
   console.log(sess);
@@ -83,6 +86,7 @@ module.exports.showForm = function(req, res) {
     getMain(req, res);
   }
   else{
+    //If not, render login/registration page
     console.log("user not in session");
     var loginerrormsg = req.app.locals.loginerrormsg;
     var errormsg = req.app.locals.errormsg;
@@ -90,7 +94,7 @@ module.exports.showForm = function(req, res) {
   }
 };
 
-//Render index.ejs
+//Render login/registration page
 function getIndex(req, res, loginerrormsg, errormsg, registrationdisplay, logindisplay){
   console.log("get index ran!");
   var allResult = {};
@@ -102,9 +106,9 @@ function getIndex(req, res, loginerrormsg, errormsg, registrationdisplay, logind
   res.render('index.ejs', {allResult:allResult, registrationdisplay:registrationdisplay, logindisplay:logindisplay});
 }
 
-//Get /main
+//When GET '/main', check if user is in session and render page
 module.exports.showMain = function(req, res) {
-  console.log("ShowMAIN is ran");
+  console.log("showMAIN ran");
   sess = req.session;
   console.log(sess);
   if(sess && "login" in sess){
@@ -112,6 +116,9 @@ module.exports.showMain = function(req, res) {
   }
   else{
     console.log("Not in session");
+    var loginerrormsg = req.app.locals.loginerrormsg;
+    var errormsg = req.app.locals.errormsg;
+    getIndex(req, res, loginerrormsg, errormsg, nodisplay, showdisplay);
   }
 };
 
@@ -127,7 +134,7 @@ function getMain(req, res){
   //OVERALL Analytics
   //Find 2 articles with most number of revisions
   Revision.findMostNumRev(2, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.mostNumRev1 = result[0]._id;
       allResult.mostNumRev2 = result[1]._id;
@@ -138,7 +145,7 @@ function getMain(req, res){
 
   //Find 2 articles with least number of revisions
   Revision.findLeastNumRev(2, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.leastNumRev1 = result[0]._id;
       allResult.leastNumRev2 = result[1]._id;
@@ -149,7 +156,7 @@ function getMain(req, res){
 
   //Find an article that are revised by largest group of registered users
   Revision.findLargestRegisteredUsers(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.largestRegUserRev = result[0]._id;
       count++;
@@ -159,7 +166,7 @@ function getMain(req, res){
 
   //Find an article that are revised by smallest group of registered users
   Revision.findSmallestRegisteredUsers(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.smallestRegUserRev = result[0]._id;
       count++;
@@ -169,7 +176,7 @@ function getMain(req, res){
 
   //Find an article with the oldest age
   Revision.findLongestHistory(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.longestHistory1 = result[0]._id;
       allResult.longestHistory2 = result[1]._id;
@@ -180,7 +187,7 @@ function getMain(req, res){
 
   //Find an article with the youngest age
   Revision.findYoungestHistory(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.youngestHistory = result[0]._id;
       count++;
@@ -190,7 +197,7 @@ function getMain(req, res){
 
   //Get the revision number distribution by year and by user type across the whole data set for Bar chart
   Revision.overallBarChart(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.overallBarChart = result;
       count++;
@@ -200,7 +207,7 @@ function getMain(req, res){
 
   //Get the revision number distribution by user type across the whole data set for Pie chart
   Revision.overallPieChart(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.overallPieChart = result;
       count++;
@@ -210,7 +217,7 @@ function getMain(req, res){
 
   //Get number of revisions by type of admin for Pie chart
   Revision.overallRevAdminType(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.overallRevAdminType = result;
       count++;
@@ -220,7 +227,7 @@ function getMain(req, res){
 
   //Get all the article names for drop down list
   Revision.articleDropDownList(function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.articleDropDownList = result;
       count++;
@@ -249,7 +256,7 @@ module.exports.getHighLowRev = function(req, res) {
   var numberofarticle = parseInt(req.query.numberofarticle);
   //Get # articles with highest number of revision
   Revision.findMostNumRev(numberofarticle, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       for(var i=0;i<numberofarticle;i++){
         allResult.mostNumRev[i] = result[i]._id;
@@ -261,7 +268,7 @@ module.exports.getHighLowRev = function(req, res) {
   });
   //Get # articles with lowest number of revision
   Revision.findLeastNumRev(numberofarticle, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       for(var i=0;i<numberofarticle;i++){
         allResult.leastNumRev[i] = result[i]._id;
@@ -303,7 +310,7 @@ module.exports.showIndividualResult = function(req, res) {
   var count = 0;
 
   Revision.findTitleLatestRev(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       latestRevTime = result[0].timestamp;
       parameters.push("rvstart=" + latestRevTime);
@@ -332,10 +339,9 @@ module.exports.showIndividualResult = function(req, res) {
       else{
         //NOT UPDATED
         console.log("not updated");
-        //console.log(options);
+
         //Request for revisions info from Wikipedia
         pullWikiData(options, function(revisions){
-            console.log('running thiisssissisiis');
             allResult.updateMsg = "There are " + revisions.length + " new revisions. The articles data have been updated!";
             count++;
             parseIndividualResult(allResult, res, count, 'individualArticleResult.ejs');
@@ -379,9 +385,8 @@ module.exports.showIndividualResult = function(req, res) {
             }
             //Insert data to mongoDB
             Revision.addData(revisions, function(err, result){
-              if(err){console.log("ERROR");}
+              if(err){console.log(err);}
               else{
-                console.log("this function called AFTER UPDATE");
                 getIndividualResult(title, res, allResult, count);
               }
             });
@@ -391,6 +396,7 @@ module.exports.showIndividualResult = function(req, res) {
     });
 }
 
+// Check all queries of individual analytics results are run before render
 function parseIndividualResult(allResult, res, count, viewfile){
   console.log(count);
   if(count < 7){return;}
@@ -420,7 +426,6 @@ pullWikiData = function(options, callback){
           }
           uniqueUsers = new Set(users);
           console.log("The new revisions are made by " + uniqueUsers.size + " unique users");
-          //return revisions;
           callback(revisions);
       })
   }).on('error',function(e){
@@ -428,9 +433,11 @@ pullWikiData = function(options, callback){
   })
 }
 
+// Get all individual analytics query results
 function getIndividualResult(title, res, allResult, count){
+  //Get number of revisions of the article
   Revision.articleRevNumber(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.articleRevNumber = result;
       count++;
@@ -438,8 +445,9 @@ function getIndividualResult(title, res, allResult, count){
     }
   });
 
+  //Get top 5 regular users that made most revisions on the article
   Revision.top5RegUsers(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.top5users = [];
       //allResult.top5RegUsers1 = result[0];
@@ -451,8 +459,9 @@ function getIndividualResult(title, res, allResult, count){
     }
   });
 
+  //Get revision number distributed by year and by user type for this article for bar chart
   Revision.articleBarChart(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.articleBarChart = result;
       count++;
@@ -460,8 +469,9 @@ function getIndividualResult(title, res, allResult, count){
     }
   });
 
+  //Get revision number distribution based on user type for this article for pie chart
   Revision.articlePieChart(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.articlePieChart = result;
       count++;
@@ -471,7 +481,7 @@ function getIndividualResult(title, res, allResult, count){
 
   //Get number of revisions by type of admin for Pie chart
   Revision.articleAdminType(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       allResult.articleAdminType = result;
       count++;
@@ -479,8 +489,9 @@ function getIndividualResult(title, res, allResult, count){
     }
   });
 
+  //Get year list for year range selection
   Revision.articleYearList(title, function(err, result){
-    if(err){console.log("ERROR");}
+    if(err){console.log(err);}
     else{
       for(var i=0;i<result.length;i++){
         for(var j=0;j<result.length-i-1;j++){
@@ -500,7 +511,7 @@ function getIndividualResult(title, res, allResult, count){
   });
 }
 
-
+//Get revision number distributed by year made by one or a few of the top 5 users for this article and render
 module.exports.getIndividualBarChartTop5 = function(req, res) {
   var title = req.query.title;
   var topusers = req.query.topusers;
@@ -523,7 +534,7 @@ module.exports.getIndividualBarChartTop5 = function(req, res) {
   });
 }
 
-
+//Get author analytics results and render
 module.exports.showAuthorResult = function(req, res) {
   var user = req.query.user;
   allResult = {};
@@ -533,11 +544,17 @@ module.exports.showAuthorResult = function(req, res) {
     if(err){console.log(err);}
     else{
       allResult.authorAnalytics = result;
+      allResult.authorErrorMsg = "";
+      if(result === undefined || result.length == 0){
+        console.log("result is null");
+        allResult.authorErrorMsg = "Author is not found. Please input the author's name again.";
+      }
       res.render('authorAnalyticsResult.ejs', {allResult: allResult});
     }
   });
 }
 
+//Get list of timestamps of all revisions made by a user on an article and render
 module.exports.showTimestampResult = function(req, res) {
   var user = req.query.user;
   var title = req.query.title;

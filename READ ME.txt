@@ -1,16 +1,9 @@
 Before running the server, do the following
 1) Run 'npm install' on root directory
-2) Go to /app/import/ in importJSON.js, change directoryPath (line 3) to the path of directory where JSON files are located
-3) In the same directory in update.js, change path (line 5) to path of directory where all admin_...txt and bot.txt are located
-4) In terminal, cd to /app/import and run 'node importJSON.js'
-5) cd to /app/models/update and run 'node update.js'
-6) Run the server, you can run with 'node server.js' or 'npm start'
-	**npm start is enabled by the nodemon module, I added it because it automatically run the server whenever changes in the codes are made. So you don't have to run 'node server.js' every time you update the file
-
-
-Current path (check in /app/routes/analytics.server.routes.js)
-locatlhost:3000/ >> show login form (the login form doesn't work yet)
->> click register and fill in all the info (validation is added)
-after submit it'll redirect to
-localhost:3000/main >> show the main page (this is where all the functions will be displayed)
->>try inputting some number in the Number of Article field and search, the result of the articles with highest number of revisions will change
+2) Move 'dataset' directory into /app/import/
+** Note that if the 'dataset' directory name is changed, the path in importJSON.js and update.js, and app/controllers/analytics.server.controller.js will also needed to be changed.
+3) On terminal, cd to /app/import/
+4) Run 'node importJSON'
+5) Run 'node update'. After the update for all 8 user types have been completed, force end the execution (^C).
+5) cd back to root directory
+6) Run 'node server'

@@ -1,6 +1,3 @@
-/**
- *
- */
 var mongoose = require('./db');
 var fs = require('fs');
 
@@ -43,7 +40,10 @@ RevisionSchema.statics.findLeastNumRev = function(number, callback){
 //Overall #4 : The article edited by largest group of registered users. Each wiki article is edited by a number of users, some making multiple revisions. The number of unique users is a good indicator of an article’s popularity.
 RevisionSchema.statics.findLargestRegisteredUsers = function(callback){
 	var query = [
-		{$match:{anon:{$exists:false}}},
+		{$match:{
+    	anon:{$exists:false},
+    	registered:{$exists:true}
+    }},
 		{$group:{_id:{title:"$title",user:"$user"}}},
 		{$group:{_id:"$_id.title",count:{$sum:1}}},
 		{$sort:{count:-1}},
@@ -56,7 +56,10 @@ RevisionSchema.statics.findLargestRegisteredUsers = function(callback){
 //Overall #5 : The article edited by smallest group of registered users.
 RevisionSchema.statics.findSmallestRegisteredUsers = function(callback){
 	var query = [
-		{$match:{anon:{$exists:false}}},
+		{$match:
+			{anon:{$exists:false},
+    	registered:{$exists:true}
+		}},
 		{$group:{_id:{title:"$title",user:"$user"}}},
 		{$group:{_id:"$_id.title",count:{$sum:1}}},
 		{$sort:{count:1}},

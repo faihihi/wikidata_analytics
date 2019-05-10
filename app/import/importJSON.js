@@ -1,7 +1,9 @@
 var exec = require("child_process").exec;
 const fs = require("fs");
-var directoryPath = "/Users/puifai/Downloads/web_sample/assignment2/dataset/revisions/";
-var importcommand = 'mongoimport --jsonArray --db testwiki --collection revisions --file ' + directoryPath;
+var pathModule = require('path');
+
+var directoryPath = pathModule.join(process.cwd(),'dataset/revisions/');
+var importcommand = 'mongoimport --jsonArray --db wikidata --collection revisions --file ' + directoryPath;
 
 //check if directory exist
 if(fs.existsSync(directoryPath)){

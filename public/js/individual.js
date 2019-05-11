@@ -81,7 +81,7 @@ function drawArticleBarChart(){
     var data = google.visualization.arrayToDataTable(bar);
     var options = {
         'title':"Revision number distributed by year and by user type of the article: " + $('#selectArticle').val(),
-        'width':1100,
+        'width':900,
         'height':500,
         colors: ['#bf5f5f', '#ffafaf', '#ff9b41', '#bb245f']
     };

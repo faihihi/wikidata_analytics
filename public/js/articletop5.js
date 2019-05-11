@@ -36,7 +36,7 @@ function drawArticleBarChartTop5Users(){
     var data = google.visualization.arrayToDataTable(bar);
 
     var options = {
-      'width': 1100,
+      'width': 900,
       'height': 500,
       colors: ['#bf5f5f', '#ffafaf', '#ff9b41', '#bb245f', '#7e5dc3'],
       'title': "Revision number distributed by year made by one or a few of the top 5 users for this article",

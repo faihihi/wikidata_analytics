@@ -111,7 +111,7 @@ function drawOverallBarChart(){
   var data = google.visualization.arrayToDataTable(bar);
   var options = {
       'title':"Revision number distribution by year and by user type across the whole dataset",
-      'width':1100,
+      'width':900,
       'height':500,
       colors: ['#bf5f5f', '#ffafaf', '#ff9b41', '#bb245f']
   };

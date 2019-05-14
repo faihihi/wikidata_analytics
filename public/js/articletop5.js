@@ -44,7 +44,7 @@ function drawArticleBarChartTop5Users(){
         title: 'timestamp'
       }
     };
-    var chart = new google.visualization.ColumnChart($("#articleBarChartTop5Sec")[0]);
+    var chart = new google.visualization.ColumnChart($("#articleBarChartTop5Section")[0]);
     chart.draw(data, options);
   }
 }

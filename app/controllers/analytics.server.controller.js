@@ -529,6 +529,28 @@ module.exports.getIndividualBarChartTop5 = function(req, res) {
       //console.log(result);
       allResult.usersArray = usersArray;
       allResult.articleBarChartTop5 = result;
+      var arraytemp = [];
+      for(var i=0;i<usersArray.length;i++){
+        arraytemp.push(usersArray[i]);
+      }
+
+      for(var i=0;i<result.length;i++){
+        for(var j=0;j<arraytemp.length;j++){
+          if(result[i].user == arraytemp[j]){
+            arraytemp.splice(j,1);
+            j--;
+          }
+        }
+      }
+      if(arraytemp.length == 0){
+        //console.log("user completed!");
+        allResult.top5error = "";
+      }
+      else{
+        //console.log("user not complete");
+        allResult.top5error = "The graph could not be constructed. Please select a bigger range of years.";
+      }
+
       res.render('finalBarChartTop5.ejs', {allResult: allResult});
     }
   });

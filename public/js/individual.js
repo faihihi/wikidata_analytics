@@ -47,7 +47,7 @@ $(document).ready(function(){
         console.log(from + " " + to + " " + topusers);
         //console.log(typeof(user));
         $.get(route, function(result) {
-          //console.log(result);
+          console.log(result);
           $('#topusererror').html("");
           $('#individualTitleTop5BarChart').html(result)
         });
